@@ -1,0 +1,28 @@
+{% extends "r_edit/base.html" %}
+
+{% block title %} REdit | Subreddits {% endblock %}
+
+{% block content %}
+    <div class="w-4/5 h-screen p-5">
+        <h1 class="text-4xl mb-6 font-bold">Subreddits management</h1>
+        <div>
+            <form action="" method="POST" class="flex items-center">
+                {% csrf_token %}
+                {{ form.name }}
+                <button type="submit" 
+                        class="bg-blue-500 text-white rounded-r-md px-4 py-2 hover:bg-blue-600 transition duration-200">
+                    +
+                </button>
+            </form>
+            <div class="mt-5 flex gap-1">
+                {% for subreddit in object_list %}
+                    <div class="bg-white border border-gray-300 rounded-md p-2 flex justify-center items-center h-10">
+                        <a href="{{subreddit.url}}" target="_blank" class="text-sm font-medium text-center bl">r/{{ subreddit.name }}</a>
+                    </div>
+                {% empty %}
+                    <p class="text-gray-500">No subreddits available.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

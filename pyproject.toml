@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "env"
+version = "0.1.0"
+description = ""
+authors = ["dominik.kielbowicz <dominik.kielbowicz@easysolar-app.com>"]
+readme = "README.md"
+package-mode = false
+
+
+[tool.poetry.dependencies]
+python = "^3.10"
+poethepoet = "^0.29.0"
+django = "^5.1.2"
+django-tailwind = {extras = ["reload"], version = "^3.8.0"}
+
+[tool.poe.tasks.start]
+help = "Starts the development server"
+cmd = "poetry run python manage.py runserver"
+
+[tool.poe.tasks.start-tailwind]
+help = "Starts tailwind server"
+cmd = "poetry run python manage.py tailwind start"
+
+[tool.poe.tasks.migrate]
+help = "Migrates database"
+cmd = "poetry run python manage.py migrate"
+
+[tool.poe.tasks.make-migrations]
+help = "Makes new migrations"
+cmd = "poetry run python manage.py makemigrations"
+
+
+[tool.poe.tasks.reset-db]
+help = "Resets db"
+sequence = [
+    { cmd = "poetry run python manage.py flush --noinput" },
+    "migrate",
+]
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

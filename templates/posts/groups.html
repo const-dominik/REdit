@@ -1,0 +1,35 @@
+{% extends "r_edit/base.html" %}
+
+{% block title %} REdit | Content Groups {% endblock %}
+
+{% block content %}
+    <div class="h-screen p-5">
+        <h1 class="text-4xl mb-6 font-bold">Content groups management</h1>
+        <div class="mt-8">
+            <form action="" method="POST" class="flex items-center">
+                {% csrf_token %}
+                {{ form.name }}
+                <button type="submit" 
+                        class="bg-blue-500 text-white rounded-r-md px-4 py-2 hover:bg-blue-600 transition duration-200">
+                    +
+                </button>
+            </form>
+        </div>
+        {% if object_list %}
+            <h3 class="text-2xl my-5">Your content groups</h3>
+            <div class="h-1/2 overflow-y-auto">
+                {% for group in object_list %}
+                    <div class="w-3/5 border-2 bg-gray-100 m-auto p-3 mb-5">
+                        <h5 class="text-center font-medium">{{group.name}}</h5>
+                        <div class="border"></div>
+                        {% if group.subreddits.exists %}
+                            we got some
+                        {% else %}
+                            <p class="text-center mt-3">This group is empty.</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

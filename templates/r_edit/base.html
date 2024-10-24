@@ -1,0 +1,38 @@
+{% load tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    {% tailwind_css %}
+</head>
+<body class="w-screen h-screen flex box-border m-0 p-0" >
+    <nav class="w-1/5 h-screen bg-blue-100 text-black p-4">
+        <h1 class="text-5xl font-bold mb-9 text-orange-500 text-center">REdit</h1>
+        <ul>
+            <li class="mb-4">
+                <a href="{% url 'dashboard' %}" 
+                class="hover:bg-blue-400 p-2 rounded block {% if page_name == "dashboard" %} bg-blue-300 {% else %} bg-blue-200 {% endif %} font-medium">
+                    Dashboard</a>
+            </li>
+            <li class="mb-4">
+                <a href="{% url 'subreddits' %}" 
+                class="hover:bg-blue-400 p-2 rounded block {% if page_name == "subreddits" %} bg-blue-300 {% else %} bg-blue-200 {% endif %} font-medium">
+                    Subreddits</a>
+            </li>
+            <li class="mb-4">
+                <a href="{% url 'contentgroups' %}" 
+                class="hover:bg-blue-400 p-2 rounded block {% if page_name == "groups" %} bg-blue-300 {% else %} bg-blue-200 {% endif %} font-medium">
+                    Content Groups</a>
+            </li>
+        </ul>
+    </nav>
+    
+    <main class="bg-orange-100 w-4/5 h-screen">
+    {% block content %} 
+    {% endblock %}
+    </main>
+</body>
+</html>
