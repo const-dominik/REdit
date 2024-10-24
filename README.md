@@ -9,7 +9,8 @@ Potrzebujesz tak:
 Uruchamianie:
 - `git clone repo.git`
 - `poetry install` - to ci instaluje dependency potrzebne
-- `poe start` - i to startuje serwer, nie wylaczasz tego terminala
+- `poe migrate` - stworzenie bazy danych
+- `poe start` - startuje serwer, nie wylaczasz tego terminala
 - `poe start-tailwind` - w osobnym terminalu
 
 i powinno hulać :) 
