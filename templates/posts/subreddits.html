@@ -17,7 +17,8 @@
             <div class="mt-5 flex gap-1">
                 {% for subreddit in object_list %}
                     <div class="bg-white border border-gray-300 rounded-md p-2 flex justify-center items-center h-10">
-                        <a href="{{subreddit.url}}" target="_blank" class="text-sm font-medium text-center bl">r/{{ subreddit.name }}</a>
+                        <a href="{{subreddit.url}}" target="_blank" class="text-sm font-medium text-center">r/{{ subreddit.name }}</a>
+                        <div class="ml-2 cursor-pointer" onclick="handleClick(event, '{{ subreddit.id }}')">&#10005;</div>
                     </div>
                 {% empty %}
                     <p class="text-gray-500">No subreddits available.</p>
@@ -25,4 +26,23 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const handleClick = async (event, id) => {
+            event.preventDefault();
+            console.log(id);
+            const URL = `{% url 'subreddit-detail' pk=0 %}`.replace("0", id);
+
+            const response = await fetch(URL, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                }
+            });
+            if (response.ok) {
+                location.reload();
+            }
+        }
+    </script>
 {% endblock %}

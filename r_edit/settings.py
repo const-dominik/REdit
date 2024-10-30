@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     "tailwind",
     "theme",
     "django_browser_reload",
+    "rest_framework",
+    "django_extensions",
 ]
 
 R_EDIT_APPS = ["dashboard.apps.DashboardConfig", "posts.apps.PostsConfig"]

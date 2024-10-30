@@ -1,5 +1,9 @@
 from django.urls import path
-from posts.views import SubredditList, ContentGroupList
+from posts.views import (
+    SubredditList,
+    ContentGroupList,
+)
+
 
 urlpatterns = [
     path("", SubredditList.as_view(), name="subreddits"),
