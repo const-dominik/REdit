@@ -1,0 +1,25 @@
+{% extends "r_edit/base.html" %}
+
+{% block title %} REdit | Posts Management {% endblock %}
+
+{% block head %}
+    {{ form.media }}
+{% endblock %}
+
+{% block content %}
+<div class="w-4/5 h-screen p-5">
+    <h1 class="text-4xl mb-6 font-bold">Posts fetching</h1>
+    <p>This should be automatic, like everything else.</p>
+    <form method="POST" action="{% url 'posts-fetch' %}" class="bg-orange-50 p-6 rounded-lg shadow-md space-y-4 max-w-md mt-10">
+        {% csrf_token %}
+        <h2 class="text-2xl border-b-2"> Fetch new posts </h2>
+        <div class="space-y-4">
+            {{ form }}
+        </div>
+    
+        <button type="submit" class="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition duration-200">
+            Submit
+        </button>
+    </form>
+</div>
+{% endblock %}

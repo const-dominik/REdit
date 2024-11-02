@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -32,6 +33,7 @@ INSTALLED_APPS = [
     "django_browser_reload",
     "rest_framework",
     "django_extensions",
+    "django_select2",
 ]
 
 R_EDIT_APPS = ["dashboard.apps.DashboardConfig", "posts.apps.PostsConfig"]
@@ -85,7 +87,8 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
-
+MEDIA_URL = "media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

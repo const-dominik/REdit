@@ -1,0 +1,32 @@
+{% extends "r_edit/base.html" %}
+
+{% block title %} REdit | Posts {% endblock %}
+
+{% block content %}
+<div class="w-4/5 h-screen p-5">
+    <h1 class="text-4xl mb-6 font-bold">Posts</h1>
+    <div class="space-y-4 overflow-y-auto h-5/6">
+        {% for post in object_list %}
+            <div class="border border-gray-300 rounded-md p-4 bg-white shadow-sm hover:shadow-md transition-shadow duration-200">
+                <h2 class="text-xl font-semibold">{{ post.title }}</h2>
+                <p class="text-sm text-gray-600">Subreddit: <a href="{{ post.subreddit.url }}" class="text-blue-500 hover:underline">r/{{ post.subreddit.name }}</a></p>
+                {% if post.content %}
+                    <p class="text-sm text-gray-600">Content: {{ post.content }}</p>
+                {% endif %}
+                <p class="text-sm text-gray-600">Author: {{ post.author }}</p>
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                {% endif %}
+                {% if post.video %}
+                    <video controls class="w-full h-auto mb-4">
+                        <source src="{{ post.video.url }}" type="video/mp4">
+                    </video>
+                {% endif %}
+                <p class="text-sm text-gray-500">Posted on: {{ post.posted_at|date:"F j, Y, g:i a" }}</p>
+            </div>
+        {% empty %}
+            <p class="text-gray-500">No posts available.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

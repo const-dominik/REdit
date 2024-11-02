@@ -6,11 +6,26 @@
     <div class="w-4/5 h-screen p-5">
         <h1 class="text-4xl mb-6 font-bold">Subreddits management</h1>
         <div>
-            <form action="" method="POST" class="flex items-center">
+            <form action="" method="POST" class="flex flex-row items-start space-y-4">
                 {% csrf_token %}
-                {{ form.name }}
+                
+                <div class="flex items-center space-x-2">
+                    {{ form.name }}
+                </div>
+            
+                <div class="flex flex-col space-y-2">
+                    <div class="flex flex-wrap">
+                        {% for checkbox in form.types %}
+                            <label class="inline-flex items-center bg-gray-100 p-2 mx-1 rounded-md shadow-sm hover:bg-gray-200 border-orange-300 border transition">
+                                {{ checkbox.tag }}
+                                <span class="text-gray-800 ml-1">{{ checkbox.choice_label }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
                 <button type="submit" 
-                        class="bg-blue-500 text-white rounded-r-md px-4 py-2 hover:bg-blue-600 transition duration-200">
+                class="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 transition duration-200">
                     +
                 </button>
             </form>

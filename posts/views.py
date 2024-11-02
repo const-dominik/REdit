@@ -1,11 +1,14 @@
-from django.views.generic import ListView
-from posts.models import Subreddit, ContentGroup
-from posts.forms import SubredditForm, ContentGroupForm
+from django.views.generic import ListView, FormView
 from django.shortcuts import render, redirect
-from posts.serializers import SubredditSerializer, ContentGroupSerializer
-from rest_framework import viewsets
 from django.http import JsonResponse
+from django.urls import reverse_lazy
+
 import json
+from posts.models import Subreddit, ContentGroup, Post
+from posts.forms import SubredditForm, ContentGroupForm, FetchPostsForm
+from posts.serializers import SubredditSerializer, ContentGroupSerializer
+from posts.scripts import fetch_posts
+from rest_framework import viewsets
 
 
 class SubredditList(ListView):
@@ -75,3 +78,30 @@ class ContentGroupList(ListView):
 class ContentGroupViewSet(viewsets.ModelViewSet):
     queryset = ContentGroup.objects.all()
     serializer_class = ContentGroupSerializer
+
+
+class PostsFormView(FormView):
+    form_class = FetchPostsForm
+    template_name = "posts/posts-form.html"
+    success_url = reverse_lazy("posts-fetch")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_name"] = "posts-fetch"
+
+        return context
+
+    def form_valid(self, form):
+        fetch_posts(**form.cleaned_data)
+
+        return super().form_valid(form)
+
+
+class PostsView(ListView):
+    model = Post
+    template_name = "posts/posts.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_name"] = "posts"
+        return context
