@@ -11,8 +11,9 @@
 
     {% tailwind_css %}
 </head>
-<body class="w-screen h-screen flex box-border m-0 p-0" >
-    <nav class="w-1/5 h-screen bg-blue-100 text-black p-4">
+<body class="w-screen h-screen flex box-border m-0 p-0 overflow-hidden">
+    <!-- Sidebar -->
+    <nav class="w-1/5 bg-blue-100 text-black p-4 fixed h-full">
         <h1 class="text-5xl font-bold mb-9 text-orange-500 text-center">REdit</h1>
         <ul>
             <li class="mb-4">
@@ -42,10 +43,11 @@
             </li>
         </ul>
     </nav>
-    
-    <main class="bg-orange-100 w-4/5 h-screen">
-    {% block content %} 
-    {% endblock %}
+
+    <!-- Main Content Area -->
+    <main class="ml-[20%] w-[80%] h-full bg-orange-100 overflow-y-auto p-5">
+        {% block content %}
+        {% endblock %}
     </main>
 </body>
 </html>
