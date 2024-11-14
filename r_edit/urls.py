@@ -16,6 +16,7 @@ urlpatterns = [
     path("", RedirectView.as_view(url="/dashboard/", permanent=True)),
     path("dashboard/", include("dashboard.urls"), name="dashboard"),
     path("subreddits/", include("posts.urls"), name="posts"),
+    path("videos/", include("videos.urls"), name="videos"),
     path("__reload__/", include("django_browser_reload.urls")),
     path("api/", include(router.urls)),
 ]

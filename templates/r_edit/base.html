@@ -41,6 +41,11 @@
                 class="hover:bg-blue-400 p-2 rounded block {% if page_name == "posts" %} bg-blue-300 {% else %} bg-blue-200 {% endif %} font-medium">
                     Posts</a>
             </li>
+            <li class="mb-4">
+                <a href="{% url 'video-form' %}" 
+                class="hover:bg-blue-400 p-2 rounded block {% if page_name == "video-form" %} bg-blue-300 {% else %} bg-blue-200 {% endif %} font-medium">
+                    Video generation</a>
+            </li>
         </ul>
     </nav>
 

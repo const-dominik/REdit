@@ -36,7 +36,11 @@ INSTALLED_APPS = [
     "django_select2",
 ]
 
-R_EDIT_APPS = ["dashboard.apps.DashboardConfig", "posts.apps.PostsConfig"]
+R_EDIT_APPS = [
+    "dashboard.apps.DashboardConfig",
+    "posts.apps.PostsConfig",
+    "videos.apps.VideosConfig",
+]
 
 INSTALLED_APPS += R_EDIT_APPS
 
