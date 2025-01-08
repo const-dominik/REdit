@@ -29,11 +29,27 @@
                     +
                 </button>
             </form>
-            <div class="mt-5 flex gap-1">
+            <div class="mt-5 flex flex-wrap gap-4">
                 {% for subreddit in object_list %}
-                    <div class="bg-white border border-gray-300 rounded-md p-2 flex justify-center items-center h-10">
-                        <a href="{{subreddit.url}}" target="_blank" class="text-sm font-medium text-center">r/{{ subreddit.name }}</a>
-                        <div class="ml-2 cursor-pointer" onclick="handleClick(event, '{{ subreddit.id }}')">&#10005;</div>
+                    <div class="bg-white border border-gray-300 rounded-md p-3 flex flex-col justify-center items-start w-64">
+                        <div class="flex justify-between w-full">
+                            <a href="{{ subreddit.url }}" target="_blank" class="text-sm font-medium">r/{{ subreddit.name }}</a>
+                            <div class="cursor-pointer text-gray-500" onclick="handleClick(event, '{{ subreddit.id }}')">&#10005;</div>
+                        </div>
+                        <div class="mt-2 flex gap-2">
+                            {% for type, label in content_types.items %}
+                                <div 
+                                    class="cursor-pointer 
+                                    {% if type in subreddit.get_types %} 
+                                        text-gray-600 
+                                    {% else %} 
+                                        text-gray-400 opacity-30 
+                                    {% endif %}" 
+                                    onclick="toggleType('{{ subreddit.id }}', '{{ type }}', this)">
+                                    <span class="">{{ label }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 {% empty %}
                     <p class="text-gray-500">No subreddits available.</p>
@@ -58,6 +74,34 @@
             if (response.ok) {
                 location.reload();
             }
+        }
+
+        const toggleType = async (subredditId, type, element) => {
+            const isSelected = element.classList.contains('text-gray-600');
+    
+            const response = await fetch(window.location.href, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    subreddit_id: subredditId,
+                    type: type,
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                if (!data.removed) {
+                    element.classList.add('text-gray-600');
+                    element.classList.remove('opacity-30');
+                } else {
+                    element.classList.remove('text-gray-600');
+                    element.classList.add('opacity-30');
+                }
+            };
         }
     </script>
 {% endblock %}

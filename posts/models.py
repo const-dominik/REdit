@@ -5,6 +5,7 @@ from datetime import datetime
 class ContentGroup(models.Model):
     name = models.CharField(max_length=50, unique=True)
     subreddits = models.ManyToManyField("Subreddit", related_name="content_groups")
+    theme = models.CharField(max_length=250, null=True, blank=True, default="")
 
     def __str__(self):
         return self.name
@@ -28,6 +29,21 @@ class Subreddit(models.Model):
 
     def get_types(self):
         return self.types.split(",") if self.types else []
+
+    def toggle_type(self, type):
+        types = self.get_types()
+
+        removed_flag = True
+
+        if type in types:
+            types.remove(type)
+        else:
+            types.append(type)
+            removed_flag = False
+
+        self.set_types(types)
+
+        return removed_flag
 
     @property
     def url(self):
