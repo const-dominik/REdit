@@ -1,12 +1,17 @@
-from moviepy.editor import ImageSequenceClip
+import os
+import random
+
+from moviepy.editor import ImageSequenceClip, AudioFileClip
 from django.core.files import File
 from django.utils import timezone
 from PIL import Image
-import os
 from io import BytesIO
+from django.conf import settings
 
 from posts.models import Post
 from videos.models import GeneratedVideo
+
+audio_path = os.path.join(settings.MEDIA_ROOT, "audio\\meme\\audio.mp3")
 
 
 def resize_image(image_path, target_size):
@@ -19,12 +24,16 @@ def resize_image(image_path, target_size):
     return img_byte_arr
 
 
-def generate_video(content_group):
+def get_images(content_group):
     posts = Post.objects.filter(
         subreddit__in=content_group.subreddits.all(), image__isnull=False
-    )[:5]
+    )
 
-    image_paths = [post.image.path for post in posts]
+    random_posts = random.sample(list(posts), 5)
+
+    image_paths = [
+        post.image.path for post in list(filter(lambda x: x.image, random_posts))
+    ]
 
     target_size = Image.open(image_paths[0]).size
     resized_images = []
@@ -41,8 +50,20 @@ def generate_video(content_group):
             temp_image_file.write(resized_img.getvalue())
         temp_resized_image_paths.append(temp_image_path)
 
-    clip = ImageSequenceClip(temp_resized_image_paths, fps=1 / 5)
+    return temp_resized_image_paths
+
+
+def generate_video(content_group):
+    images = get_images(content_group)
+
     temp_video_path = "temp_video.mp4"
+
+    image_clip = ImageSequenceClip(images, fps=1 / 5)
+
+    audio_clip = AudioFileClip(audio_path)
+
+    clip = image_clip.set_audio(audio_clip)
+
     clip.write_videofile(temp_video_path, codec="libx264")
 
     with open(temp_video_path, "rb") as video_file:
@@ -55,8 +76,6 @@ def generate_video(content_group):
         )
         generated_video.save()
 
-    for temp_image_path in temp_resized_image_paths:
-        os.remove(temp_image_path)
     os.remove(temp_video_path)
 
     return generated_video
