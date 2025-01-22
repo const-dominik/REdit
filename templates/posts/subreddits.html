@@ -61,7 +61,6 @@
     <script>
         const handleClick = async (event, id) => {
             event.preventDefault();
-            console.log(id);
             const URL = `{% url 'subreddit-detail' pk=0 %}`.replace("0", id);
 
             const response = await fetch(URL, {

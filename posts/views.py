@@ -29,13 +29,15 @@ class SubredditList(ListView):
         return context
 
     def post(self, request, *args, **kwargs):
+        # TODO: this is shit
+        # TODO2: content group scrolling is shit
         if request.POST:
             subreddit_form = SubredditForm(request.POST)
 
             if subreddit_form.is_valid():
                 subreddit_form.save()
 
-        if request.body:
+        elif request.body:
             data = json.loads(request.body)
 
             subreddit_id = data["subreddit_id"]
@@ -47,7 +49,7 @@ class SubredditList(ListView):
                 subreddit.save()
                 return JsonResponse({"success": True, "removed": removed})
             except Subreddit.DoesNotExist:
-                print("xd")
+                pass
 
         return redirect("subreddits")
 
@@ -85,8 +87,17 @@ class ContentGroupList(ListView):
                 if "new_name" in data:
                     group.name = data["new_name"]
 
-                if "theme" in data:
-                    group.theme = data["theme"]
+                if "start_text" in data:
+                    group.start_text = data["start_text"]
+
+                if "end_text" in data:
+                    group.end_text = data["end_text"]
+
+                if "media_per_vid" in data:
+                    group.media_per_video = int(data["media_per_vid"])
+
+                if "type" in data:
+                    group.type = data["type"]
 
                 if "subreddit_id" in data:
                     subreddit = Subreddit.objects.get(id=data["subreddit_id"])

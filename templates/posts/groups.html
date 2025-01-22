@@ -3,9 +3,10 @@
 {% block title %} REdit | Content Groups {% endblock %}
 
 {% block content %}
-<div class="h-screen p-5">
+<div class="h-screen p-5 flex flex-col">
     <h1 class="text-4xl mb-6 font-bold">Content groups management</h1>
 
+    <!-- Form to Add New Content Group -->
     <div class="mt-8">
         <form action="" method="POST" class="flex items-center">
             {% csrf_token %}
@@ -17,96 +18,177 @@
         </form>
     </div>
 
-    {% if subreddits_available.count %}
-        <h3 class="text-2xl my-5">Available Subreddits</h3>
-        <div class="mt-5 flex gap-1">
-            {% for subreddit in subreddits_available %}
-                <div class="bg-white border border-gray-300 rounded-md p-2 flex justify-center items-center h-10 cursor-grab" 
-                    draggable="true" 
-                    data-subreddit-id="{{ subreddit.id }}" 
-                    ondragstart="handleDragStart(event)">
-                    <div class="text-sm font-medium text-center">r/{{ subreddit.name }}</div>
-                </div>
-            {% empty %}
-                <p class="text-gray-500">No subreddits available.</p>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    {% if object_list %}
-        <h3 class="text-2xl my-5">Your content groups</h3>
-        <div class="h-1/2 overflow-y-auto">
-            {% for group in object_list %}
-                <div class="w-3/5 border-2 bg-gray-100 m-auto p-3 mb-5" 
-                     ondrop="handleDrop(event, '{{ group.id }}')" 
-                     ondragover="allowDrop(event)">
-                     <div class="relative flex items-center">
-                        <div class="absolute left-0 cursor-pointer text-gray-700" onclick="removeGroup(event, '{{ group.id }}')">&#10005;</div>
-                        
-                        <div class="flex-1 text-center font-medium">
-                            <span id="group-name-{{ group.id }}">{{ group.name }}</span>
-                            <button class="ml-1 text-blue-500 text-sm" onclick="toggleEditGroup('{{ group.id }}')">Edit</button>
-                        </div>
-                    </div>
-                    
-                    <div id="edit-group-{{ group.id }}" class="hidden flex mt-2 mb-2 items-center gap-2">
-                        <input 
-                            type="text" 
-                            id="group-name-input-{{ group.id }}" 
-                            class="border rounded px-2 py-1 w-1/3 text-sm" 
-                            value="{{ group.name }}" 
-                            placeholder="Edit group name"
-                        >
-                        <button 
-                            class="bg-blue-500 text-white px-3 py-1 text-sm rounded hover:bg-blue-600" 
-                            onclick="submitEditGroup('{{ group.id }}')">
-                            Save
-                        </button>
-                        <button 
-                            type="submit"
-                            class="bg-gray-300 text-black px-3 py-1 text-sm rounded hover:bg-gray-400 " 
-                            onclick="toggleEditGroup('{{ group.id }}')">
-                            Cancel
-                        </button>
-                    </div>
-
-                    <div id="edit-theme-{{ group.id }}" class="flex mt-2 mb-2 items-center gap-2">
-                        <input 
-                            type="text" 
-                            id="edit-theme-input-{{ group.id }}" 
-                            class="border rounded px-2 py-1 w-1/3 text-sm"
-                            value="{{ group.theme }}"
-                            placeholder="Enter music theme"
-                        >
-                        <button 
-                            class="bg-blue-500 text-white px-3 py-1 text-sm rounded hover:bg-blue-600" 
-                            onclick="changeMusicTheme('{{ group.id }}')">
-                            Save
-                        </button>
-
-                    </div>
-
-                    <div class="border"></div>
-                    <div class="subreddits-list mt-3">
-                        {% if group.subreddits.exists %}
-                            <div class="mt-5 flex gap-1">
-                            {% for subreddit in group.subreddits.all %}
-                                <div class="bg-white border border-gray-300 rounded-md p-2 flex justify-center items-center h-10">
-                                    <a href="{{subreddit.url}}" target="_blank" class="text-sm font-medium text-center">r/{{ subreddit.name }}</a>
-                                    <div class="ml-2 cursor-pointer" onclick="handleClick(event, '{{ subreddit.id }}', '{{ group.id }}')">&#10005;</div>
-                                </div>
-                            {% endfor %}
+    <!-- Split Layout -->
+    <div class="flex gap-8 mt-8 flex-1 overflow-hidden">
+        <!-- Left Column: Available Subreddits -->
+        <div class="w-1/3 flex flex-col">
+            {% if subreddits_available.count %}
+                <h3 class="text-2xl mb-5">Available Subreddits</h3>
+                <div class="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-50">
+                    <div class="flex flex-wrap gap-2">
+                        {% for subreddit in subreddits_available %}
+                            <div class="bg-white border border-gray-300 rounded-md p-2 flex justify-center items-center h-10 cursor-grab" 
+                                draggable="true" 
+                                data-subreddit-id="{{ subreddit.id }}" 
+                                ondragstart="handleDragStart(event)">
+                                <div class="text-sm font-medium text-center">r/{{ subreddit.name }}</div>
                             </div>
-                        {% else %}
-                            <p class="text-center mt-3">This group is empty.</p>
-                        {% endif %}
+                        {% empty %}
+                            <p class="text-gray-500">No subreddits available.</p>
+                        {% endfor %}
                     </div>
                 </div>
-            {% endfor %}
+            {% endif %}
         </div>
-    {% else %}
-        <p class="text-gray-500 my-4">No content groups available.</p>
-    {% endif %}
+
+        <!-- Right Column: Content Groups -->
+        <div class="w-2/3 flex flex-col">
+            {% if object_list %}
+                <h3 class="text-2xl text-gray-700 mb-6">Your content groups</h3>
+
+                <div class="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-50">
+                    <div class="space-y-4">
+                        {% for group in object_list %}
+                            <div class="bg-gradient-to-br from-blue-50 to-orange-50 border border-blue-100 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
+                                 ondrop="handleDrop(event, '{{ group.id }}')" 
+                                 ondragover="allowDrop(event)">
+                                
+                                <!-- Group Header -->
+                                <div class="relative flex items-center mb-4">
+                                    <!-- Delete Button -->
+                                    <div class="absolute left-0 cursor-pointer text-gray-500 hover:text-red-600 transition-colors"
+                                         onclick="removeGroup(event, '{{ group.id }}')">
+                                        &#10005;
+                                    </div>
+                                    
+                                    <!-- Group Name and Edit Button -->
+                                    <div class="flex-1 text-center">
+                                        <span id="group-name-{{ group.id }}" class="text-lg text-gray-700">{{ group.name }}</span>
+                                        <button class="ml-2 text-blue-500 text-sm hover:text-blue-600 transition-colors"
+                                                onclick="toggleEditGroup('{{ group.id }}')">
+                                            Edit
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Edit Group Name Section -->
+                                <div id="edit-group-{{ group.id }}" class="hidden mt-4 mb-6 flex items-center gap-3">
+                                    <input 
+                                        type="text" 
+                                        id="group-name-input-{{ group.id }}" 
+                                        class="flex-1 border border-blue-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 outline-none transition-all"
+                                        value="{{ group.name }}" 
+                                        placeholder="Edit group name"
+                                    >
+                                    <button 
+                                        class="bg-blue-400 text-white px-4 py-2 text-sm rounded-lg hover:bg-blue-500 transition-colors"
+                                        onclick="submitEditGroup('{{ group.id }}')">
+                                        Save
+                                    </button>
+                                    <button 
+                                        class="bg-orange-200 text-gray-700 px-4 py-2 text-sm rounded-lg hover:bg-orange-300 transition-colors"
+                                        onclick="toggleEditGroup('{{ group.id }}')">
+                                        Cancel
+                                    </button>
+                                </div>
+
+                                <div id="edit-type-{{ group.id }}" class="mt-4 mb-6 flex items-center gap-3">
+                                    <select 
+                                        id="edit-type-input-{{ group.id }}" 
+                                        class="flex-1 border border-blue-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 outline-none transition-all"
+                                    >
+                                        <option value="vid" {% if group.type == "vid" %}selected{% endif %}>Video</option>
+                                        <option value="img" {% if group.type == "img" %}selected{% endif %}>Image</option>
+                                        <option value="text" {% if group.type == "text" %}selected{% endif %}>Text</option>
+                                    </select>
+                                    <button 
+                                        class="bg-blue-400 text-white px-4 py-2 text-sm rounded-lg hover:bg-blue-500 transition-colors"
+                                        onclick="changeType('{{ group.id }}')">
+                                        Save
+                                    </button>
+                                </div>
+
+                                <div id="edit-start-text-{{ group.id }}" class="mt-4 mb-6 flex items-center gap-3">
+                                    <input 
+                                        type="text" 
+                                        id="edit-start-text-input-{{ group.id }}" 
+                                        class="flex-1 border border-blue-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 outline-none transition-all"
+                                        value="{{ group.start_text }}"
+                                        placeholder="Enter start text"
+                                    >
+                                    <button 
+                                        class="bg-blue-400 text-white px-4 py-2 text-sm rounded-lg hover:bg-blue-500 transition-colors"
+                                        onclick="changeText('{{ group.id }}', 'start_text')">
+                                        Save
+                                    </button>
+                                </div>
+
+                                <!-- End Text Section -->
+                                <div id="edit-end-text-{{ group.id }}" class="mt-4 mb-6 flex items-center gap-3">
+                                    <input 
+                                        type="text" 
+                                        id="edit-end-text-input-{{ group.id }}" 
+                                        class="flex-1 border border-blue-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 outline-none transition-all"
+                                        value="{{ group.end_text }}"
+                                        placeholder="Enter end text"
+                                    >
+                                    <button 
+                                        class="bg-blue-400 text-white px-4 py-2 text-sm rounded-lg hover:bg-blue-500 transition-colors"
+                                        onclick="changeText('{{ group.id }}', 'end_text')">
+                                        Save
+                                    </button>
+                                </div>
+
+                                <!-- Quantity Per Video Section -->
+                                <div id="edit-qty-{{ group.id }}" class="mt-4 mb-6 flex items-center gap-3">
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max="20"
+                                        id="edit-qty-input-{{ group.id }}"
+                                        class="flex-1 border border-blue-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 outline-none transition-all"
+                                        value="{{ group.media_per_video }}"
+                                        placeholder="How many items per video?"
+                                    />
+                                    <button 
+                                        class="bg-blue-400 text-white px-4 py-2 text-sm rounded-lg hover:bg-blue-500 transition-colors"
+                                        onclick="changeStuffPerVid('{{ group.id }}')">
+                                        Save
+                                    </button>
+                                </div>
+
+                                <!-- Divider -->
+                                <div class="border-t border-blue-100 my-4"></div>
+
+                                <!-- Subreddits List -->
+                                <div class="subreddits-list mt-4">
+                                    {% if group.subreddits.exists %}
+                                        <div class="flex flex-wrap gap-2">
+                                            {% for subreddit in group.subreddits.all %}
+                                                <div class="bg-white border border-blue-100 rounded-lg p-2 flex items-center gap-2 hover:bg-blue-50 transition-colors">
+                                                    <a href="{{ subreddit.url }}" target="_blank" class="text-sm font-medium text-blue-500 hover:text-blue-600 transition-colors">
+                                                        r/{{ subreddit.name }}
+                                                    </a>
+                                                    <div class="text-gray-500 cursor-pointer hover:text-red-600 transition-colors"
+                                                         onclick="handleClick(event, '{{ subreddit.id }}', '{{ group.id }}')">
+                                                        &#10005;
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <p class="text-center text-gray-500 mt-3">This group is empty.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-gray-500 my-4">No content groups available.</p>
+            {% endif %}
+        </div>
+    </div>
 </div>
 
 <script>
@@ -193,9 +275,11 @@
         }
     }
 
-    const changeMusicTheme = async (groupId) => {
-        const input = document.querySelector(`#edit-theme-input-${groupId}`);
-        const theme = input.value;
+    const changeText = async (groupId, type) => {
+        const START_TEXT_SELECTOR = `#edit-start-text-input-${groupId}`;
+        const END_TEXT_SELECTOR = `#edit-end-text-input-${groupId}`;
+        const input = document.querySelector(type === "start_text" ? START_TEXT_SELECTOR : END_TEXT_SELECTOR);
+        const value = input.value;
     
         const response = await fetch(window.location.href, {
             method: 'POST',
@@ -203,7 +287,7 @@
                 'Content-Type': 'application/json',
                 "X-CSRFToken": "{{ csrf_token }}"
             },
-            body: JSON.stringify({ group_id: groupId, theme })
+            body: JSON.stringify({ group_id: groupId, [type]: value })
         })
         
         const data = await response.json();
@@ -213,6 +297,47 @@
             setTimeout(() => input.classList.remove("border-emerald-500"), 1000);
         }
     }
+
+    const changeStuffPerVid = async (groupId) => {
+        const input = document.querySelector(`#edit-qty-input-${groupId}`);
+        const value = input.value;
+    
+        const response = await fetch(window.location.href, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({ group_id: groupId, media_per_vid: Number(value) })
+        })
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            input.classList.add("border-emerald-500");
+            setTimeout(() => input.classList.remove("border-emerald-500"), 1000);
+        }
+    }
+
+    const changeType = async (groupId) => {
+        const typeInput = document.querySelector(`#edit-type-input-${groupId}`);
+        const selectedType = typeInput.value;
+    
+        const response = await fetch(window.location.href, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({ group_id: groupId, type: selectedType })
+        });
+    
+        const data = await response.json();
+        if (data.success) {
+            typeInput.classList.add("border-emerald-500");
+            setTimeout(() => typeInput.classList.remove("border-emerald-500"), 1000);
+        }
+    };
 
 </script>
 {% endblock %}

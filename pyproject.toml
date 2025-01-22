@@ -19,6 +19,7 @@ django-select2 = "^8.2.1"
 python-dotenv = "^1.0.1"
 praw = "^7.8.1"
 moviepy = "^1.0.3"
+pytesseract = "^0.3.13"
 
 [tool.poe.tasks.start]
 help = "Starts the development server"

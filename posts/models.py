@@ -1,21 +1,13 @@
 from django.db import models
 from datetime import datetime
-
-
-class ContentGroup(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    subreddits = models.ManyToManyField("Subreddit", related_name="content_groups")
-    theme = models.CharField(max_length=250, null=True, blank=True, default="")
-
-    def __str__(self):
-        return self.name
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Subreddit(models.Model):
     class Type(models.TextChoices):
         IMAGE = "img"  # memes, cute animals
         VIDEO = "vid"  # memes, cute animals also, satisfying stuff
-        TEXT = "text"  # amitheasshole, showerthough
+        TEXT = "text"  # amitheasshole, showerthoughts
 
     types = models.CharField(
         max_length=20
@@ -51,6 +43,22 @@ class Subreddit(models.Model):
 
     def __str__(self):
         return f"r/{self.name}"
+
+
+class ContentGroup(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    subreddits = models.ManyToManyField("Subreddit", related_name="content_groups")
+    start_text = models.CharField(max_length=50, blank=True, null=True, default="")
+    end_text = models.CharField(max_length=50, blank=True, null=True, default="")
+    media_per_video = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(500)], default=1
+    )
+    type = models.CharField(
+        max_length=4, choices=Subreddit.Type.choices, default=Subreddit.Type.IMAGE
+    )
+
+    def __str__(self):
+        return self.name
 
 
 class Post(models.Model):
