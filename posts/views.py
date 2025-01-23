@@ -1,5 +1,5 @@
 from django.views.generic import ListView, FormView
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 
@@ -73,49 +73,34 @@ class ContentGroupList(ListView):
 
     def post(self, request, *args, **kwargs):
         if request.POST:
-            content_groups_form = ContentGroupForm(request.POST)
-            if content_groups_form.is_valid():
-                content_groups_form.save()
+            form = ContentGroupForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return JsonResponse({"success": True})
+            else:
+                return JsonResponse({"success": False, "errors": form.errors})
 
         elif request.body:
             data = json.loads(request.body)
-            group_id = data["group_id"]
+            group_id = data.get("group_id")
 
-            try:
-                group = ContentGroup.objects.get(id=group_id)
+            group = get_object_or_404(ContentGroup, id=group_id)
 
-                if "new_name" in data:
-                    group.name = data["new_name"]
-
-                if "start_text" in data:
-                    group.start_text = data["start_text"]
-
-                if "end_text" in data:
-                    group.end_text = data["end_text"]
-
-                if "media_per_vid" in data:
-                    group.media_per_video = int(data["media_per_vid"])
-
-                if "type" in data:
-                    group.type = data["type"]
-
-                if "subreddit_id" in data:
-                    subreddit = Subreddit.objects.get(id=data["subreddit_id"])
-                    if group.subreddits.filter(id=data["subreddit_id"]).exists():
-                        group.subreddits.remove(subreddit)
-                    else:
-                        group.subreddits.add(subreddit)
-
+            if "subreddit_id" in data:
+                subreddit = Subreddit.objects.get(id=data["subreddit_id"])
+                if group.subreddits.filter(id=data["subreddit_id"]).exists():
+                    group.subreddits.remove(subreddit)
+                else:
+                    group.subreddits.add(subreddit)
                 group.save()
-
                 return JsonResponse({"success": True})
 
-            except (ContentGroup.DoesNotExist, Subreddit.DoesNotExist):
-                return JsonResponse(
-                    {"success": False, "error": "Subreddit or Content Group not found."}
-                )
-
-        return redirect("contentgroups")
+            form = ContentGroupForm(data, instance=group)
+            if form.is_valid():
+                form.save()
+                return JsonResponse({"success": True})
+            else:
+                return JsonResponse({"success": False, "errors": form.errors})
 
 
 class ContentGroupViewSet(viewsets.ModelViewSet):

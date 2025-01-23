@@ -10,15 +10,27 @@ class ContentGroupForm(forms.ModelForm):
         model = ContentGroup
         fields = [
             "name",
+            "start_text",
+            "end_text",
+            "media_per_video",
+            "type",
+            "media_per_screen",
+            "background",
         ]
         widgets = {
             "name": forms.TextInput(
-                attrs={
-                    "placeholder": "Add a new content group",
-                    "class": "border border-gray-300 rounded-l-md px-4 py-2 focus:outline-none focus:ring-blue-500",
-                    "required": "required",
-                }
+                attrs={"class": "form-control", "placeholder": "Group Name"}
             ),
+            "start_text": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Start Text"}
+            ),
+            "end_text": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "End Text"}
+            ),
+            "media_per_video": forms.NumberInput(attrs={"class": "form-control"}),
+            "type": forms.Select(attrs={"class": "form-control"}),
+            "media_per_screen": forms.Select(attrs={"class": "form-control"}),
+            "background": forms.Select(attrs={"class": "form-control"}),
         }
 
 

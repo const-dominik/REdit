@@ -46,6 +46,12 @@ class Subreddit(models.Model):
 
 
 class ContentGroup(models.Model):
+    class Backgrounds(models.TextChoices):
+        BLACK = "black"
+        MINECRAFT = "minecraft"
+        SUBWAY = "subway"
+        NOTBLACK = "not-black"
+
     name = models.CharField(max_length=50, unique=True)
     subreddits = models.ManyToManyField("Subreddit", related_name="content_groups")
     start_text = models.CharField(max_length=50, blank=True, null=True, default="")
@@ -56,6 +62,12 @@ class ContentGroup(models.Model):
     type = models.CharField(
         max_length=4, choices=Subreddit.Type.choices, default=Subreddit.Type.IMAGE
     )
+    media_per_screen = models.IntegerField(choices=[(1, "one"), (2, "two")], default=1)
+    background = models.CharField(
+        max_length=10,
+        choices=Backgrounds.choices,
+        default="minecraft",
+    )
 
     def __str__(self):
         return self.name
@@ -65,9 +77,7 @@ class Post(models.Model):
     post_id = models.CharField(max_length=50, unique=True)
     subreddit = models.ForeignKey(Subreddit, on_delete=models.CASCADE)
     title = models.CharField(max_length=300)
-    content = models.CharField(
-        max_length=2000, blank=True, null=True
-    )  # if it's longer, it's gonna take way too long to read
+    content = models.CharField(max_length=2000, blank=True, null=True)
     image = models.ImageField(upload_to="images/", null=True, blank=True)
     video = models.FileField(upload_to="videos/", null=True, blank=True)
     posted_at = models.DateTimeField()
