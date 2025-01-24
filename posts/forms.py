@@ -6,6 +6,19 @@ import re
 
 
 class ContentGroupForm(forms.ModelForm):
+    start_text = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Start Text"}
+        ),
+    )
+    end_text = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "End Text"}
+        ),
+    )
+
     class Meta:
         model = ContentGroup
         fields = [
@@ -62,7 +75,9 @@ class SubredditForm(forms.ModelForm):
                 return match.group(1)
             else:
                 raise forms.ValidationError("Please enter a valid Reddit URL.")
-
+        elif re.match(r"^r/", name):
+            _, sub_name = name.split("r/")
+            return sub_name
         return name
 
     def clean_types(self):

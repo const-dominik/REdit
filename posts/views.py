@@ -1,6 +1,6 @@
 from django.views.generic import ListView, FormView
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 
 import json
@@ -29,8 +29,6 @@ class SubredditList(ListView):
         return context
 
     def post(self, request, *args, **kwargs):
-        # TODO: this is shit
-        # TODO2: content group scrolling is shit
         if request.POST:
             subreddit_form = SubredditForm(request.POST)
 
@@ -74,9 +72,9 @@ class ContentGroupList(ListView):
     def post(self, request, *args, **kwargs):
         if request.POST:
             form = ContentGroupForm(request.POST)
-            if form.is_valid():
-                form.save()
-                return JsonResponse({"success": True})
+            if "name" in form.data:
+                ContentGroup.objects.create(name=form.data["name"])
+                return HttpResponseRedirect(reverse_lazy("contentgroups"))
             else:
                 return JsonResponse({"success": False, "errors": form.errors})
 

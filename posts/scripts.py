@@ -52,20 +52,25 @@ def fetch_posts(subreddit, time_filter, amount):
                         my_post_data["image"] = image_file
 
             if "vid" in subreddit.types and "." not in post.url[-5:]:
-                JSON_URL = f"https://www.reddit.com/r/{subreddit.name}/comments/{post.id}/.json"
-                VIDEO_URL = get_video_link(JSON_URL)
+                if hasattr(post, "media") and post.media is not None:
+                    video_url = post.media["reddit_video"]["fallback_url"]
+                    video_url = video_url.split("?")[0]
 
-                response = requests.get(VIDEO_URL, stream=True)
+                    if video_url is not None:
+                        response = requests.get(video_url, stream=True)
+                        if response.status_code == 200:
+                            file_name = f"{post.id}.mp4"
 
-                if response.status_code == 200:
-                    file_name = f"{post.id}.mp4"
-
-                    my_post_data["video"] = ContentFile(
-                        response.content, name=file_name
-                    )
-
+                            my_post_data["video"] = ContentFile(
+                                response.content, name=file_name
+                            )
             try:
-                Post.objects.create(**my_post_data)
+                if (
+                    "content" in my_post_data
+                    or "image" in my_post_data
+                    or "video" in my_post_data
+                ):
+                    Post.objects.create(**my_post_data)
             except IntegrityError:
                 print(f"Post with title '{post.title}' already exists, skipping.")
                 continue

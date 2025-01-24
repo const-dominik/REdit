@@ -54,8 +54,8 @@ class ContentGroup(models.Model):
 
     name = models.CharField(max_length=50, unique=True)
     subreddits = models.ManyToManyField("Subreddit", related_name="content_groups")
-    start_text = models.CharField(max_length=50, blank=True, null=True, default="")
-    end_text = models.CharField(max_length=50, blank=True, null=True, default="")
+    start_text = models.CharField(max_length=50, default="")
+    end_text = models.CharField(max_length=50, default="")
     media_per_video = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(500)], default=1
     )

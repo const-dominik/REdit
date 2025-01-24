@@ -234,8 +234,9 @@
     const saveGroupChanges = async (groupId) => {
         const form = document.querySelector(`#edit-form-${groupId}`);
         const formData = new FormData(form);
+        console.log(formData)
         const data = Object.fromEntries(formData.entries());
-
+        console.log(data)
         const response = await fetch(window.location.href, {
             method: "POST",
             headers: {
