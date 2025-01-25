@@ -1,50 +1,33 @@
 import os
 import random
 import datetime
-import pytesseract
 import numpy as np
-import tempfile
 
 from moviepy import (
     ImageClip,
     AudioFileClip,
-    TextClip,
-    VideoFileClip,
     CompositeVideoClip,
     concatenate_videoclips,
-    afx,
 )
+
+from moviepy.video.fx import Loop
+
+from moviepy.audio.AudioClip import CompositeAudioClip
 
 from django.core.files import File
 from django.utils import timezone
 from PIL import Image
-from django.conf import settings
 
-from posts.models import Post
 from videos.models import GeneratedVideo
-
-audio_path = os.path.join(settings.MEDIA_ROOT, "audio\\meme\\edamame.mp3")
-minecraft_path = os.path.join(settings.MEDIA_ROOT, "backgrounds\\minecraft")
-subway_path = os.path.join(settings.MEDIA_ROOT, "backgrounds\\minecraft")
-font_path = os.path.join(settings.MEDIA_ROOT, "font.otf")
-
-minecraft_files = [
-    f"{minecraft_path}\\{f}"
-    for f in os.listdir(minecraft_path)
-    if os.path.isfile(os.path.join(minecraft_path, f))
-]
-
-subway_files = [
-    f"{subway_path}\\{f}"
-    for f in os.listdir(subway_path)
-    if os.path.isfile(os.path.join(subway_path, f))
-]
-
-VIDEO_WIDTH = 1080
-VIDEO_HEIGHT = 1920
-
-pytesseract.pytesseract.tesseract_cmd = (
-    r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+from videos.scripts.tts import get_transcribed_tts
+from videos.scripts.utils import (
+    find_duration,
+    get_background,
+    resize_media,
+    add_audio_to_clip,
+    get_media,
+    audio_path,
+    create_text_clip,
 )
 
 
@@ -56,94 +39,6 @@ def generate_video(content_group):
     elif content_group.type == "text":
         return generate_text_video(content_group)
     raise ValueError("Invalid content group type.")
-
-
-def find_words_in_image(image_path):
-    img = Image.open(image_path)
-    text = pytesseract.image_to_string(img)
-
-    words = list(map(lambda x: x.split(" "), text.split("\n")))
-    words_flat = [word for line in words for word in line]
-    words_qty = len(list(filter(lambda x: x.strip() != "", words_flat)))
-
-    return words_qty
-
-
-def get_background(background_type):
-    if background_type == "black":
-        return Image.new("RGB", (VIDEO_WIDTH, VIDEO_HEIGHT), (0, 0, 0))
-    elif background_type in ["minecraft", "subway"]:
-        video = random.choice(
-            minecraft_files if background_type == "minecraft" else subway_files
-        )
-        return VideoFileClip(video)
-    return get_background("minecraft" if random.random() < 0.5 else "subway")
-
-
-def find_duration(image_path):
-    words = find_words_in_image(image_path) - 10
-    duration = 5
-
-    if words > 0:
-        duration += words / 6
-
-    return duration
-
-
-def get_media(content_group, media_type):
-    if media_type == "img":
-        posts = Post.objects.filter(
-            subreddit__in=content_group.subreddits.all(), image__isnull=False
-        )
-        media_field = "image"
-    elif media_type == "vid":
-        posts = Post.objects.filter(
-            subreddit__in=content_group.subreddits.all(), video__isnull=False
-        )
-        media_field = "video"
-    else:
-        raise ValueError("Invalid media type. Use 'img' or 'vid'.")
-
-    random_posts = random.sample(list(posts), content_group.media_per_video)
-
-    media_paths = [
-        getattr(post, media_field).path
-        for post in list(filter(lambda x: getattr(x, media_field), random_posts))
-    ]
-
-    if not len(media_paths):
-        return False
-
-    return media_paths, random_posts
-
-
-def resize_media(media_path, target_size=(VIDEO_WIDTH, VIDEO_HEIGHT), media_type="img"):
-    if media_type == "img":
-        img = Image.open(media_path)
-
-        target_width, target_height = target_size
-
-        img.thumbnail(
-            (target_width * 0.8, target_height * 0.4), Image.Resampling.LANCZOS
-        )
-
-        return img
-    elif media_type == "vid":
-        video_clip = VideoFileClip(media_path)
-
-        aspect_ratio = video_clip.size[0] / video_clip.size[1]
-        if aspect_ratio > (target_size[0] / target_size[1]):
-            new_width = int(target_size[0] * 0.8)
-            new_height = int(new_width / aspect_ratio)
-        else:
-            new_height = int(target_size[1] * 0.4)
-            new_width = int(new_height * aspect_ratio)
-
-        resized_clip = video_clip.resized((new_width, new_height))
-
-        return resized_clip
-    else:
-        raise ValueError("Invalid media type. Use 'img' or 'vid'.")
 
 
 def create_canvas_with_media(
@@ -202,32 +97,6 @@ def create_canvas_with_media(
         raise ValueError("Invalid media type. Use 'img' or 'vid'.")
 
 
-def add_audio_to_clip(clip, audio):
-    audio_clip = AudioFileClip(audio)
-
-    if clip.duration > audio_clip.duration:
-        audio_clip = audio_clip.with_effects([afx.AudioLoop(duration=clip.duration)])
-    else:
-        audio_clip = audio_clip.subclipped(0, clip.duration)
-
-    clip = clip.with_audio(audio_clip)
-    return clip
-
-
-def create_text_clip(text, duration=1.0):
-    text_clip = TextClip(
-        font=font_path,
-        text=text,
-        font_size=100,
-        color="white",
-        size=(VIDEO_WIDTH, VIDEO_HEIGHT),
-    )
-    text_clip = text_clip.with_position("center")
-    text_clip = text_clip.with_duration(duration)
-
-    return text_clip
-
-
 def generate_media_video(content_group, media_type="img"):
     media_result = get_media(content_group, media_type)
     if not media_result:
@@ -237,7 +106,7 @@ def generate_media_video(content_group, media_type="img"):
     media_paths, posts = media_result
 
     temp_video_path = f"temp_video_{int(datetime.datetime.now().timestamp())}.mp4"
-    fps = 10
+    fps = 60
 
     background_clip = get_background(content_group.background)
 
@@ -301,7 +170,79 @@ def generate_media_video(content_group, media_type="img"):
 
 
 def generate_text_video(content_group):
-    """
-    Generate a video using text (to be implemented).
-    """
-    pass
+    media_result = get_media(content_group, "txt")
+    if not media_result:
+        print("No text media found for the content group.")
+        return
+
+    _, posts = media_result
+
+    for post in posts:
+        title_audio_path, _ = get_transcribed_tts(post.title, 0.9)
+        content_audio_path, timestamps = get_transcribed_tts(post.content, 0.9)
+
+        background_clip = get_background(content_group.background)
+
+        text_clips = []
+
+        title_audio_clip = AudioFileClip(title_audio_path)
+        title_duration = title_audio_clip.duration
+        title_clip = create_text_clip(
+            post.title, is_title=True, duration=title_duration, font_size=75
+        )
+        title_clip = title_clip.with_audio(title_audio_clip)
+        text_clips.append(title_clip)
+
+        for word, start_time, end_time in timestamps:
+            word_clip = create_text_clip(
+                word, duration=end_time - start_time, font_size=100
+            )
+            word_clip = word_clip.with_start(start_time + title_duration)
+            text_clips.append(word_clip)
+
+        final_text_clip = CompositeVideoClip(text_clips)
+
+        content_audio_clip = AudioFileClip(content_audio_path).with_start(
+            title_duration
+        )
+
+        final_audio_clip = CompositeAudioClip([title_audio_clip, content_audio_clip])
+
+        final_text_clip = final_text_clip.with_duration(final_audio_clip.duration)
+
+        if background_clip.duration < final_text_clip.duration:
+            background_clip = background_clip.with_effects(
+                [Loop(duration=final_text_clip.duration)]
+            )
+        else:
+            background_clip = background_clip.subclipped(0, final_text_clip.duration)
+
+        final_clip = CompositeVideoClip([background_clip, final_text_clip]).with_audio(
+            final_audio_clip
+        )
+
+        temp_video_path = (
+            f"temp_text_video_{int(datetime.datetime.now().timestamp())}.mp4"
+        )
+        final_clip.write_videofile(temp_video_path, codec="libx264", fps=60)
+
+        metadata = {
+            "length": float(final_clip.duration),
+            "title": post.title,
+            "content": post.content,
+            "video_type": "text",
+        }
+
+        with open(temp_video_path, "rb") as video_file:
+            video_content = File(video_file)
+            generated_video = GeneratedVideo.objects.create(
+                video=video_content,
+                content_group=content_group,
+                created_at=timezone.now(),
+                meta_data=metadata,
+            )
+            generated_video.used_media.set([post])
+
+        os.remove(temp_video_path)
+        os.remove(title_audio_path)
+        os.remove(content_audio_path)

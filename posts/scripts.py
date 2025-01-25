@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 import praw
 import os
 import requests
+from google import genai
+
 from datetime import datetime
 
 from django.core.files.base import ContentFile
@@ -18,13 +20,36 @@ reddit = praw.Reddit(
     refresh_token=os.getenv("REFRESH_TOKEN"),
 )
 
+gemini = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+model_name = "gemini-2.0-flash-exp"
+
+
+def transfer_text(title, text):
+    prompt = f"""I'm gonna give you a reddit post and it's title. It's gonna be uploaded on social media. Your task is:
+    If you think that the post should be considered NSFW or contain some strong content that might get me banned (for example, weird sex stories, disgusting things, +18 things), respond with a signle "NO". It's super important.
+    Otherwise, if you think the post is OK for social media, make sure that:
+    - unabbreviate abbreviations, so that when I put it through tts model, it's gonna be nice to listen to (from title and content) (example - AITAH - Am i the asshole, but censor it like described further in prompt, LPT - life pro tip, it's from reddit if you need context).
+    - text is around 250 words at most - you should shorten it if it's longer than that - it's super important so make sure you take care of this. Text shouldn't lose any meaning on shortening it, don't leave any important facts out in order to shorten it.
+    - lightly censor vulgar words (for example: asshole to A-hole, so that it's still understandable but there's no ugly words), but words like ass are fine.
+    - if text has been edited (something like "EDIT:" in text) you should remove that edit, you might integrate info from it straight to content
+
+    Once you're done, again make sure the text is correct length and didn't lose any meaning - max 250 words of content.
+    End content with some engagement-engaging text (like, for example in Am I the asshole reddit, "Who do you think is the A-hole?")
+    Respond in the same format i send you the post, and just that, no additions from you.
+
+    [TITLE]: {title}
+    [CONTENT]: {text}
+    """
+    response = gemini.models.generate_content(model=model_name, contents=prompt)
+    return response.text.strip()
+
 
 def fetch_posts(subreddit, time_filter, amount):
     posts = reddit.subreddit(subreddit.name).top(
         time_filter=time_filter, limit=int(amount)
     )
     for post in posts:
-        if not post.over_18:  # dont wanna get banned :(
+        if not post.over_18:
             posted_at_datetime = datetime.fromtimestamp(post.created_utc)
 
             my_post_data = {
@@ -36,10 +61,19 @@ def fetch_posts(subreddit, time_filter, amount):
             }
 
             if "text" in subreddit.types and post.selftext:
-                if len(post.selftext) <= 2000:
-                    my_post_data["content"] = post.selftext
-                else:
-                    continue
+                changed_text = transfer_text(post.title, post.selftext)
+                if changed_text.strip() != "NO":
+                    lines = changed_text.strip().split("\n")
+
+                    title = lines[0].replace("[TITLE]:", "").strip()
+                    content = lines[1].replace("[CONTENT]:", "").strip()
+
+                    if len(lines) > 2:
+                        for line in lines[2:]:
+                            content += line
+
+                    my_post_data["title"] = title
+                    my_post_data["content"] = content
 
             if "img" in subreddit.types:
                 if post.url.endswith(("jpg", "jpeg", "png")):
@@ -85,19 +119,3 @@ def download_image(url):
     except requests.RequestException as e:
         print(f"Error downloading {url}: {e}")
         return None
-
-
-def get_video_link(url):
-    headers = {"User-Agent": os.getenv("REDDIT_AGENT")}
-    response = requests.get(url, headers=headers)
-
-    if response.status_code == 200:
-        data = response.json()
-
-        try:
-            video_url = data[0]["data"]["children"][0]["data"]["secure_media"][
-                "reddit_video"
-            ]["fallback_url"]
-            return video_url
-        except (KeyError, IndexError, TypeError):
-            return None

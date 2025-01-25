@@ -2,7 +2,7 @@ from django.views.generic import FormView
 from django.urls import reverse_lazy
 
 from videos.forms import VideoGenerateForm
-from videos.scripts import generate_video
+from videos.scripts.generation import generate_video
 
 
 class VideoFormView(FormView):

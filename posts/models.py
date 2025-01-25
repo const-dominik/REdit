@@ -77,7 +77,7 @@ class Post(models.Model):
     post_id = models.CharField(max_length=50, unique=True)
     subreddit = models.ForeignKey(Subreddit, on_delete=models.CASCADE)
     title = models.CharField(max_length=300)
-    content = models.CharField(max_length=2000, blank=True, null=True)
+    content = models.CharField(max_length=4000, blank=True, null=True)
     image = models.ImageField(upload_to="images/", null=True, blank=True)
     video = models.FileField(upload_to="videos/", null=True, blank=True)
     posted_at = models.DateTimeField()
