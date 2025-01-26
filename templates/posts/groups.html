@@ -120,7 +120,13 @@
                                             class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 outline-none transition-all"
                                             placeholder="Media Per Video"
                                         >
-                                        
+                                        <input 
+                                            type="text" 
+                                            name="upload_description" 
+                                            value="{{ group.upload_description }}" 
+                                            class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 outline-none transition-all"
+                                            placeholder="Title for uploaded video"
+                                        >
                                         <button 
                                             type="button" 
                                             onclick="saveGroupChanges('{{ group.id }}')" 
@@ -234,9 +240,8 @@
     const saveGroupChanges = async (groupId) => {
         const form = document.querySelector(`#edit-form-${groupId}`);
         const formData = new FormData(form);
-        console.log(formData)
         const data = Object.fromEntries(formData.entries());
-        console.log(data)
+
         const response = await fetch(window.location.href, {
             method: "POST",
             headers: {

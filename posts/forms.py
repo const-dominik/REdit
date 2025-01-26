@@ -29,6 +29,7 @@ class ContentGroupForm(forms.ModelForm):
             "type",
             "media_per_screen",
             "background",
+            "upload_description",
         ]
         widgets = {
             "name": forms.TextInput(
@@ -39,6 +40,12 @@ class ContentGroupForm(forms.ModelForm):
             ),
             "end_text": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": "End Text"}
+            ),
+            "upload_description": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Title for uploaded video",
+                }
             ),
             "media_per_video": forms.NumberInput(attrs={"class": "form-control"}),
             "type": forms.Select(attrs={"class": "form-control"}),

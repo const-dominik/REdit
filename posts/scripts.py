@@ -106,7 +106,7 @@ def fetch_posts(subreddit, time_filter, amount):
                 ):
                     Post.objects.create(**my_post_data)
             except IntegrityError:
-                print(f"Post with title '{post.title}' already exists, skipping.")
+                print(f"Post with id '{post.id}' already exists, skipping.")
                 continue
 
 

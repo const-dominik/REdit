@@ -3,3 +3,5 @@ db.sqlite3
 media
 __pycache__/
 *.pyc
+yt_credentials.json
+token.json

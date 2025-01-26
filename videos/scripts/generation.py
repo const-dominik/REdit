@@ -20,6 +20,7 @@ from PIL import Image
 
 from videos.models import GeneratedVideo
 from videos.scripts.tts import get_transcribed_tts
+from videos.scripts.uploading import upload_to_social_media
 from videos.scripts.utils import (
     find_duration,
     get_background,
@@ -33,12 +34,12 @@ from videos.scripts.utils import (
 
 def generate_video(content_group):
     if content_group.type == "img":
-        return generate_media_video(content_group, media_type="img")
+        generated_video = generate_media_video(content_group, media_type="img")
     elif content_group.type == "vid":
-        return generate_media_video(content_group, media_type="vid")
+        generated_video = generate_media_video(content_group, media_type="vid")
     elif content_group.type == "text":
-        return generate_text_video(content_group)
-    raise ValueError("Invalid content group type.")
+        generated_video = generate_text_video(content_group)
+    upload_to_social_media(generated_video)
 
 
 def create_canvas_with_media(
@@ -168,6 +169,8 @@ def generate_media_video(content_group, media_type="img"):
 
     os.remove(temp_video_path)
 
+    return generated_video
+
 
 def generate_text_video(content_group):
     media_result = get_media(content_group, "txt")
@@ -228,9 +231,14 @@ def generate_text_video(content_group):
 
         metadata = {
             "length": float(final_clip.duration),
+            "background": content_group.background,
+            "media_per_screen": content_group.media_per_screen,
+            "media_qty": len(posts),
+            "video_type": content_group.type,
+            "start_text": content_group.start_text,
+            "end_text": content_group.end_text,
             "title": post.title,
             "content": post.content,
-            "video_type": "text",
         }
 
         with open(temp_video_path, "rb") as video_file:
@@ -246,3 +254,5 @@ def generate_text_video(content_group):
         os.remove(temp_video_path)
         os.remove(title_audio_path)
         os.remove(content_audio_path)
+
+        return generated_video

@@ -11,6 +11,7 @@ import pytesseract
 import os
 from django.conf import settings
 from posts.models import Post
+from videos.models import GeneratedVideo
 
 pytesseract.pytesseract.tesseract_cmd = (
     r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
@@ -38,19 +39,22 @@ VIDEO_HEIGHT = 1920
 
 
 def get_media(content_group, media_type):
+    unused_posts = Post.objects.filter(
+        subreddit__in=content_group.subreddits.all()
+    ).exclude(
+        id__in=GeneratedVideo.objects.values_list(
+            "used_media__id", flat=True
+        ).distinct()
+    )
+
     if media_type == "img":
-        posts = Post.objects.filter(
-            subreddit__in=content_group.subreddits.all(), image__isnull=False
-        )
+        posts = unused_posts.filter(image__isnull=False)
         media_field = "image"
     elif media_type == "vid":
-        posts = Post.objects.filter(
-            subreddit__in=content_group.subreddits.all(), video__isnull=False
-        )
+        posts = unused_posts.filter(video__isnull=False)
         media_field = "video"
     elif media_type == "txt":
-        posts = Post.objects.filter(
-            subreddit__in=content_group.subreddits.all(),
+        posts = unused_posts.filter(
             content__isnull=False,
             title__isnull=False,
         )

@@ -68,6 +68,9 @@ class ContentGroup(models.Model):
         choices=Backgrounds.choices,
         default="minecraft",
     )
+    upload_description = models.CharField(
+        max_length=120, default="#funny #meme #memes #comedy #lol"
+    )
 
     def __str__(self):
         return self.name

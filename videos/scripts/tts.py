@@ -42,8 +42,6 @@ def transcribe(path):
         )
     )
 
-    print(words, segments)
-
     return words
 
 
