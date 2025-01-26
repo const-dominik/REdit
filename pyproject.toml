@@ -21,12 +21,12 @@ pytesseract = "^0.3.13"
 moviepy="^2.0.0"
 google-genai = "^0.6.0"
 fugashi = "^1.4.0"
-melotts = {path = "C:/Users/domin/OneDrive/Pulpit/f/MeloTTS"}
 unidic-lite = "^1.0.8"
 openai-whisper = "^20240930"
 google-api-python-client = "^2.159.0"
 google-auth-httplib2 = "^0.2.0"
 google-auth-oauthlib = "^1.2.1"
+requests-auth-aws-sigv4 = "^0.7"
 
 
 [tool.poe.tasks.start]

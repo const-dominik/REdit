@@ -17,10 +17,14 @@ pytesseract.pytesseract.tesseract_cmd = (
     r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 )
 
-audio_path = os.path.join(settings.MEDIA_ROOT, "audio\\meme\\edamame.mp3")
-minecraft_path = os.path.join(settings.MEDIA_ROOT, "backgrounds\\minecraft")
-subway_path = os.path.join(settings.MEDIA_ROOT, "backgrounds\\minecraft")
-font_path = os.path.join(settings.MEDIA_ROOT, "font.otf")
+audio_path = os.path.join(
+    settings.STATIC_ROOT, "video_assets\\audios\\upbeat-popular\\edamame.mp3"
+)
+minecraft_path = os.path.join(
+    settings.STATIC_ROOT, "video_assets\\backgrounds\\minecraft"
+)
+subway_path = os.path.join(settings.STATIC_ROOT, "video_assets\\backgrounds\\minecraft")
+font_path = os.path.join(settings.STATIC_ROOT, "video_assets\\font.otf")
 
 minecraft_files = [
     f"{minecraft_path}\\{f}"

@@ -5,3 +5,4 @@ __pycache__/
 *.pyc
 yt_credentials.json
 token.json
+CookiesDir/*

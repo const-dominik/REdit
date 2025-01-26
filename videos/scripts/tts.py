@@ -1,5 +1,4 @@
-from melo.api import TTS
-from django.conf import settings
+from static.libs.MeloTTS.melo.api import TTS
 import datetime
 import whisper
 

@@ -4,7 +4,8 @@ import requests
 import time
 
 from dotenv import load_dotenv
-from Tiktok_uploader import uploadVideo
+
+from static.libs.uploader.TiktokAutoUploader.tiktok_uploader import tiktok, cookies
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -84,12 +85,6 @@ def upload_to_shorts(video):
         print(f"An error occurred: {e}")
 
 
-def upload_to_social_media(video):
-    # upload_to_shorts(video)
-    # upload_to_reels(video)
-    upload_to_tiktok(video)
-
-
 def upload_to_reels(video):
     drive_link = upload_file_to_drive(
         video.video.path, f"file_{int(datetime.datetime.now().timestamp())}.mp4"
@@ -148,4 +143,21 @@ def upload_to_reels(video):
 
 
 def upload_to_tiktok(video):
-    pass
+    user = "REditMemer"
+    tiktok.login(user)
+    response = tiktok.upload_video(
+        user, video.video.path, video.content_group.upload_description
+    )
+
+    if "single_post_resp_list" in response:
+        resp = response["single_post_resp_list"]
+        if "item_id" in resp:
+            UploadedVideo.objects.create(
+                video=video, platform="TikTok", uploaded_video_id=resp["item_id"]
+            )
+
+
+def upload_to_social_media(video):
+    upload_to_shorts(video)
+    upload_to_reels(video)
+    upload_to_tiktok(video)
