@@ -37,5 +37,7 @@ class UploadedVideo(models.Model):
     def __str__(self):
         if self.platform == "Youtube":
             return f"https://www.youtube.com/shorts/{self.uploaded_video_id}"
+        elif self.platform == "Instagram":
+            return f"https://www.instagram.com/reel/{self.uploaded_video_id}/"
         else:
-            pass
+            return f"https://www.tiktok.com/@reditmemer/video/{self.uploaded_video_id}"

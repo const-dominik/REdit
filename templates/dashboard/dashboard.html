@@ -1,14 +1,409 @@
 {% extends "r_edit/base.html" %}
-
+{% load analytics_filters static %}
 {% block title %} REdit | Dashboard {% endblock %}
 
-{% block content %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<style>
+    /* Basic styling for the dashboard icons */
+    .icon {
+        cursor: pointer;
+        padding: 10px;
+        transition: transform 0.2s;
+    }
+    .icon:hover {
+        transform: scale(1.1);
+    }
+</style>
+{% endblock %}
 
-    <div class="flex flex-col h-screen justify-center content-center text-center">
-        <div> 
-            <h1 class="text-7xl mb-5">Hello!</h1>
-            <p class="text-xl">Welcome to REdit. Here, you can quickly use content from Reddit to generate videos.</p>
+{% block content %}
+<div class="container mx-auto py-4 px-6">
+    <div class="flex mb-2">
+        <div class="icon" id="ytIcon">
+            <img src="{% static 'images/youtube_icon.png' %}" alt="YouTube" width="32">
+        </div>
+        <div class="icon" id="instaIcon">
+            <img src="{% static 'images/instagram_icon.png' %}" alt="Instagram" width="32">
+        </div>
+        <div class="icon" id="tiktokIcon">
+            <img src="{% static 'images/tiktok_icon.png' %}" alt="TikTok" width="32">
         </div>
     </div>
 
+    <div class="mb-6">
+        <button id="generalBtn" class="bg-blue-500 text-white px-2 py-1 rounded">General</button>
+        <button id="detailedBtn" class="bg-gray-200 text-gray-700 px-2 py-1 rounded">Detailed</button>
+    </div>
+
+    <div id="ytDashboard" class="dashboard">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Total Views</h2>
+                <p class="text-3xl font-bold text-green-500">
+                    {{ yt_shorts|sum_by_field:'views' }}
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Total Likes</h2>
+                <p class="text-3xl font-bold text-blue-500">
+                    {{ yt_shorts|sum_by_field:'likes' }}
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Total Comments</h2>
+                <p class="text-3xl font-bold text-orange-500">
+                    {{ yt_shorts|sum_by_field:'comments' }}
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Subscribers</h2>
+                <p class="text-3xl font-bold text-purple-600">
+                    {{ yt_shorts|net_subscribers:'subscribersGained,subscribersLost' }}
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Total minutes watched</h2>
+                <p class="text-3xl font-bold text-teal-500">
+                    {{ yt_shorts|sum_by_field:'estimatedMinutesWatched' }}
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Total Dislikes</h2>
+                <p class="text-3xl font-bold text-red-600">
+                    {{ yt_shorts|sum_by_field:'dislikes' }}
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Average view duration (s)</h2>
+                <p class="text-3xl font-bold text-indigo-500">
+                    {{ yt_shorts|average:'averageViewDuration' }}
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Average watch percentage (%)</h2>
+                <p class="text-3xl font-bold text-pink-500">
+                    {{ yt_shorts|average:'averageViewPercentage' }}
+                </p>
+            </div>
+        </div>
+
+        <!-- YouTube Detailed Data Section -->
+        <div id="ytDetailedData" class="hidden">
+            <h2 class="text-2xl font-semibold text-center mb-4">Detailed YouTube Data</h2>
+            <table class="min-w-full bg-white shadow-lg rounded-lg">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-600">
+                        <th class="p-2">Video Title</th>
+                        <th class="p-2">Views</th>
+                        <th class="p-2">Likes</th>
+                        <th class="p-2">Comments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Placeholder for detailed data -->
+                    <tr>
+                        <td class="p-2 border">Video 1 Title</td>
+                        <td class="p-2 border">DATA WILL BE HERE</td>
+                        <td class="p-2 border">DATA WILL BE HERE</td>
+                        <td class="p-2 border">DATA WILL BE HERE</td>
+                    </tr>
+                    <tr>
+                        <td class="p-2 border">Video 2 Title</td>
+                        <td class="p-2 border">DATA WILL BE HERE</td>
+                        <td class="p-2 border">DATA WILL BE HERE</td>
+                        <td class="p-2 border">DATA WILL BE HERE</td>
+                    </tr>
+                    <tr>
+                        <td class="p-2 border">Video 3 Title</td>
+                        <td class="p-2 border">DATA WILL BE HERE</td>
+                        <td class="p-2 border">DATA WILL BE HERE</td>
+                        <td class="p-2 border">DATA WILL BE HERE</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex flex-wrap justify-center">
+            <div class="bg-white shadow-lg rounded-lg p-4 mb-6 flex-grow mx-1" style="flex: 1 1 calc(33.333% - 0.5rem);">
+                <h2 class="text-xl font-semibold text-center mb-2">Daily Views & Likes</h2>
+                <canvas id="viewsLikesChart" class="w-full h-32"></canvas>
+            </div>
+        
+            <div class="bg-white shadow-lg rounded-lg p-4 mb-6 flex-grow mx-1" style="flex: 1 1 calc(33.333% - 0.5rem);">
+                <h2 class="text-xl font-semibold text-center mb-2">Average View Duration & Watch Percentage</h2>
+                <canvas id="avgViewDurationWatchPercentageChart" class="w-full h-32"></canvas>
+            </div>
+        
+            <div class="bg-white shadow-lg rounded-lg p-4 mb-6 flex-grow mx-1" style="flex: 1 1 calc(33.333% - 0.5rem);">
+                <h2 class="text-xl font-semibold text-center mb-2">Engagement Over Time</h2>
+                <canvas id="engagementChart" class="w-full h-32"></canvas>
+            </div>
+        
+            <div class="bg-white shadow-lg rounded-lg p-4 mb-6 flex-grow mx-1" style="flex: 1 1 calc(33.333% - 0.5rem);">
+                <h2 class="text-xl font-semibold text-center mb-2">Subscribers Gained vs Lost</h2>
+                <canvas id="subscribersChart" class="w-full h-32"></canvas>
+            </div>
+        
+            <div class="bg-white shadow-lg rounded-lg p-4 mb-6 flex-grow mx-1" style="flex: 1 1 calc(33.333% - 0.5rem);">
+                <h2 class="text-xl font-semibold text-center mb-2">Views vs Minutes Watched</h2>
+                <canvas id="viewsVsMinutesChart" class="w-full h-32"></canvas>
+            </div>
+        
+            <div class="bg-white shadow-lg rounded-lg p-4 mb-6 flex-grow mx-1" style="flex: 1 1 calc(33.333% - 0.5rem);">
+                <h2 class="text-xl font-semibold text-center mb-2">Likes vs Dislikes</h2>
+                <canvas id="likesVsDislikesChart" class="w-full h-32"></canvas>
+            </div>
+        </div>
+        
+
+    <!-- Placeholder for Instagram and TikTok dashboards -->
+    <div id="instaDashboard" class="hidden">
+        <h2 class="text-2xl font-semibold text-center mb-4">Instagram Analytics</h2>
+        <p class="text-center">DATA WILL BE HERE</p>
+    </div>
+
+    <div id="tiktokDashboard" class="hidden">
+        <h2 class="text-2xl font-semibold text-center mb-4">TikTok Analytics</h2>
+        <p class="text-center">DATA WILL BE HERE</p>
+    </div>
+</div>
+
+<script>
+    // Combined Views and Likes
+    const combinedViewsLikesData = {
+        labels: {{ yt_shorts|pluck_field:'day'|safe }},
+        datasets: [
+            {
+                label: 'Daily Views',
+                data: {{ yt_shorts|pluck_field:'views'|safe }},
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                fill: true,
+                tension: 0.1
+            },
+            {
+                label: 'Daily Likes',
+                data: {{ yt_shorts|pluck_field:'likes'|safe }},
+                borderColor: '#2196F3',
+                backgroundColor: 'rgba(33, 150, 243, 0.2)',
+                fill: false,
+                tension: 0.1
+            }
+        ]
+    };
+
+    new Chart(document.getElementById('viewsLikesChart'), {
+        type: 'line',
+        data: combinedViewsLikesData,
+        options: {
+            responsive: true,
+            maintainaspectRatio: false,
+            scales: {
+                x: { title: { display: true, text: 'Date' } },
+                y: { title: { display: true, text: 'Count' } }
+            }
+        }
+    });
+
+    // Combined Average Duration and Watch Percentage
+    const combinedAvgDurationWatchPercentageData = {
+        labels: {{ yt_shorts|pluck_field:'day'|safe }},
+        datasets: [
+            {
+                label: 'Average View Duration (s)',
+                data: {{ yt_shorts|pluck_field:'averageViewDuration'|safe }},
+                borderColor: '#FFEB3B',
+                backgroundColor: 'rgba(255, 235, 59, 0.2)',
+                fill: true,
+                tension: 0.1
+            },
+            {
+                label: 'Watch Percentage (%)',
+                data: {{ yt_shorts|pluck_field:'averageViewPercentage'|safe }},
+                borderColor: '#FF5722',
+                backgroundColor: 'rgba(255, 87, 34, 0.2)',
+                fill: false,
+                tension: 0.1
+            }
+        ]
+    };
+
+    new Chart(document.getElementById('avgViewDurationWatchPercentageChart'), {
+        type: 'line',
+        data: combinedAvgDurationWatchPercentageData,
+        options: {
+            responsive: true,
+            maintainaspectRatio: false,
+            scales: {
+                x: { title: { display: true, text: 'Date' } },
+                y: { title: { display: true, text: 'Count / Percentage' } }
+            }
+        }
+    });
+
+    const engagementOverTimeData = {
+        labels: {{ yt_shorts|pluck_field:'day'|safe }},
+        datasets: [{
+            label: 'Total Engagement',
+            data: {{ yt_shorts|total_engagement:"likes,comments,shares" }},
+            borderColor: '#FF5722',
+            backgroundColor: 'rgba(255, 87, 34, 0.2)',
+            fill: true,
+            tension: 0.1
+        }, {
+            label: 'Likes',
+            data: {{ yt_shorts|pluck_field:'likes'|safe }},
+            borderColor: '#2196F3',
+            backgroundColor: 'rgba(33, 150, 243, 0.2)',
+            fill: false,
+            borderDash: [5, 5]
+        }, {
+            label: 'Comments',
+            data: {{ yt_shorts|pluck_field:'comments'|safe }},
+            borderColor: '#FFEB3B',
+            backgroundColor: 'rgba(255, 235, 59, 0.2)',
+            fill: false,
+            borderDash: [5, 5]
+        }, {
+            label: 'Shares',
+            data: {{ yt_shorts|pluck_field:'shares'|default:0 }},
+            borderColor: '#4CAF50',
+            backgroundColor: 'rgba(76, 175, 80, 0.2)',
+            fill: false,
+            borderDash: [5, 5]
+        }]
+    };
+    
+    new Chart(document.getElementById('engagementChart'), {
+        type: 'line',
+        data: engagementOverTimeData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: { title: { display: true, text: 'Date' } },
+                y: { title: { display: true, text: 'Engagement' } }
+            }
+        }
+    });
+
+
+
+    const subscribersData = {
+        labels: {{ yt_shorts|pluck_field:'day'|safe }},
+        datasets: [
+            {
+                label: 'Subscribers Gained',
+                data: {{ yt_shorts|pluck_field:'subscribersGained'|safe }},
+                borderColor: '#3F51B5',
+                backgroundColor: 'rgba(63, 81, 181, 0.2)',
+                fill: true,
+                tension: 0.1
+            },
+            {
+                label: 'Subscribers Lost',
+                data: {{ yt_shorts|pluck_field:'subscribersLost'|safe }},
+                borderColor: '#F44336',
+                backgroundColor: 'rgba(244, 67, 54, 0.2)',
+                fill: true,
+                tension: 0.1
+            }
+        ]
+    };
+
+    new Chart(document.getElementById('subscribersChart'), {
+        type: 'line',
+        data: subscribersData,
+        options: {
+            responsive: true,
+            maintainaspectRatio: false,
+            scales: {
+                x: { title: { display: true, text: 'Date' } },
+                y: { title: { display: true, text: 'Subscribers' } }
+            }
+        }
+    });
+
+    const viewsVsMinutesData = {
+        labels: {{ yt_shorts|pluck_field:'day'|safe }},
+        datasets: [
+            {
+                label: 'Views',
+                data: {{ yt_shorts|pluck_field:'views'|safe }},
+                borderColor: '#009688',
+                backgroundColor: 'rgba(0, 150, 136, 0.2)',
+                fill: true,
+                tension: 0.1
+            },
+            {
+                label: 'Minutes Watched',
+                data: {{ yt_shorts|pluck_field:'estimatedMinutesWatched'|safe }},
+                borderColor: '#FF9800',
+                backgroundColor: 'rgba(255, 152, 0, 0.2)',
+                fill: true,
+                tension: 0.1
+            }
+        ]
+    };
+
+    new Chart(document.getElementById('viewsVsMinutesChart'), {
+        type: 'line',
+        data: viewsVsMinutesData,
+        options: {
+            responsive: true,
+            maintainaspectRatio: false,
+            scales: {
+                x: { title: { display: true, text: 'Date' } },
+                y: { title: { display: true, text: 'Count' } }
+            }
+        }
+    });
+
+    const likesVsDislikesData = {
+        labels: {{ yt_shorts|pluck_field:'day'|safe }},
+        datasets: [
+            {
+                label: 'Likes',
+                data: {{ yt_shorts|pluck_field:'likes'|safe }},
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                fill: true,
+                tension: 0.1
+            },
+            {
+                label: 'Dislikes',
+                data: {{ yt_shorts|pluck_field:'dislikes'|safe }},
+                borderColor: '#F44336',
+                backgroundColor: 'rgba(244, 67, 54, 0.2)',
+                fill: true,
+                tension: 0.1
+            }
+        ]
+    };
+
+    new Chart(document.getElementById('likesVsDislikesChart'), {
+        type: 'line',
+        data: likesVsDislikesData,
+        options: {
+            responsive: true,
+            maintainaspectRatio: false,
+            scales: {
+                x: { title: { display: true, text: 'Date' } },
+                y: { title: { display: true, text: 'Count' } }
+            }
+        }
+    });
+
+
+    document.getElementById('generalBtn').onclick = function() {
+        document.getElementById('ytDashboard').classList.remove('hidden');
+        document.getElementById('ytDetailedData').classList.add('hidden');
+    };
+
+    document.getElementById('detailedBtn').onclick = function() {
+        document.getElementById('ytDashboard').classList.add('hidden');
+        document.getElementById('ytDetailedData').classList.remove('hidden');
+    };
+</script>
 {% endblock %}

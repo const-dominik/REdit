@@ -20,10 +20,12 @@ load_dotenv()
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
     "https://www.googleapis.com/auth/drive",
+    "https://www.googleapis.com/auth/yt-analytics.readonly",
+    "https://www.googleapis.com/auth/youtube.readonly",
 ]
 
 
-def authenticate(type):
+def authenticate(type, version="v3"):
     creds = None
     if os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
@@ -37,7 +39,7 @@ def authenticate(type):
             creds = flow.run_local_server(port=0)
         with open("token.json", "w") as token:
             token.write(creds.to_json())
-    return build(type, "v3", credentials=creds)
+    return build(type, version, credentials=creds)
 
 
 def upload_file_to_drive(file_path, file_name):
@@ -81,6 +83,7 @@ def upload_to_shorts(video):
         UploadedVideo.objects.create(
             video=video, platform="Youtube", uploaded_video_id=response["id"]
         )
+        print("Uploaded to shorts!")
     except Exception as e:
         print(f"An error occurred: {e}")
 
@@ -89,7 +92,7 @@ def upload_to_reels(video):
     drive_link = upload_file_to_drive(
         video.video.path, f"file_{int(datetime.datetime.now().timestamp())}.mp4"
     )
-    print("Uploaded to drive!")
+
     # upload video
     upload_url = (
         f"https://graph.instagram.com/v22.0/{os.getenv("INSTA_ACCOUNT_ID")}/media"
@@ -113,7 +116,6 @@ def upload_to_reels(video):
         return
 
     id = response.json()["id"]
-    print("Uploaded video!")
 
     # publish!
     def publish(id):
@@ -140,6 +142,7 @@ def upload_to_reels(video):
     UploadedVideo.objects.create(
         video=video, platform="Instagram", uploaded_video_id=reel_id
     )
+    print("Uploaded to reels!")
 
 
 def upload_to_tiktok(video):
@@ -155,6 +158,7 @@ def upload_to_tiktok(video):
             UploadedVideo.objects.create(
                 video=video, platform="TikTok", uploaded_video_id=resp["item_id"]
             )
+            print("Uploaded to TikTok!")
 
 
 def upload_to_social_media(video):
