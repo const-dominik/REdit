@@ -257,21 +257,25 @@
             borderColor: '#2196F3',
             backgroundColor: 'rgba(33, 150, 243, 0.2)',
             fill: false,
-            borderDash: [5, 5]
+            borderDash: [5, 5],
+            tension: 0.1
         }, {
             label: 'Comments',
             data: {{ yt_shorts|pluck_field:'comments'|safe }},
             borderColor: '#FFEB3B',
             backgroundColor: 'rgba(255, 235, 59, 0.2)',
             fill: false,
-            borderDash: [5, 5]
+            borderDash: [5, 5],
+            tension: 0.1
         }, {
             label: 'Shares',
             data: {{ yt_shorts|pluck_field:'shares'|default:0 }},
             borderColor: '#4CAF50',
             backgroundColor: 'rgba(76, 175, 80, 0.2)',
             fill: false,
-            borderDash: [5, 5]
+            borderDash: [5, 5],
+            tension: 0.1
+
         }]
     };
     

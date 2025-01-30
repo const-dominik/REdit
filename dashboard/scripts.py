@@ -26,7 +26,7 @@ def yt_response_to_np(response):
     return structured_array
 
 
-def get_stats_analytics(start_date="2025-01-01", end_date="2026-01-31"):
+def get_stats_analytics(start_date="2025-01-21", end_date="2026-01-31"):
     service = authenticate("youtubeAnalytics", "v2")
 
     try:

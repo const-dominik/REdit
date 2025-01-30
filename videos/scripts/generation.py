@@ -58,7 +58,7 @@ def create_canvas_with_media(
             if index == 0:
                 y = int(0.05 * canvas_height)
             else:
-                y = int(0.55 * canvas_height)
+                y = int(0.5 * canvas_height)
 
             canvas.paste(img, (x, y), img)
 
@@ -87,7 +87,7 @@ def create_canvas_with_media(
                 if index == 0:
                     y = int(0.05 * canvas_height)
                 else:
-                    y = int(0.55 * canvas_height)
+                    y = int(0.5 * canvas_height)
 
             video_clips_with_positions.append(resized_clip.with_position((x, y)))
 

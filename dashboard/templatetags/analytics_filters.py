@@ -67,6 +67,6 @@ def total_engagement(data, fields):
 def average(data, field):
     "Caluclate average"
     try:
-        return mean(data[field])
+        return float("{:.2f}".format(mean(data[field])))
     except Exception:
         return 0

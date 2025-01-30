@@ -127,15 +127,15 @@ def upload_to_reels(video):
                 "access_token": os.getenv("INSTA_ACCESS_TOKEN"),
             },
         )
-
         data = response.json()
+
         if "id" in data:
             return data["id"]
 
         if "error" in data and data["error"]["message"] == "Media ID is not available":
             print("Media not ready yet, retrying in 10s.")
             time.sleep(10)
-            publish(id)
+            return publish(id)
 
     reel_id = publish(id)
 
@@ -145,15 +145,24 @@ def upload_to_reels(video):
     print("Uploaded to reels!")
 
 
+def extract_tags(title):
+    parts = title.split("#")
+    new_title = parts[0].strip()
+    tags = list(map(lambda x: x.strip(), parts[1:]))
+
+    return new_title, tags
+
+
 def upload_to_tiktok(video):
     user = "REditMemer"
     tiktok.login(user)
-    response = tiktok.upload_video(
-        user, video.video.path, video.content_group.upload_description
-    )
+    title, tags = extract_tags(video.content_group.upload_description)
+    # TODO: make tags work
 
-    if "single_post_resp_list" in response:
-        resp = response["single_post_resp_list"]
+    response = tiktok.upload_video(user, video.video.path, title)
+
+    if response is not False and "single_post_resp_list" in response:
+        resp = response["single_post_resp_list"][0]
         if "item_id" in resp:
             UploadedVideo.objects.create(
                 video=video, platform="TikTok", uploaded_video_id=resp["item_id"]
