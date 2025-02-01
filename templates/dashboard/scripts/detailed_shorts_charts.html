@@ -1,0 +1,342 @@
+{% load static analytics_filters %}
+
+{% get_views_distribution_by_content_group detailed_yt_shorts as chart_data %}
+{% get_avg_views_per_video_type detailed_yt_shorts as avg_views_video_type %}
+{% get_avg_views_per_song_type detailed_yt_shorts as avg_views_song_type %}
+{% get_avg_views_per_song_title detailed_yt_shorts as avg_views_song_title %}
+{% get_avg_views_per_background detailed_yt_shorts as avg_views_background %}
+{% get_avg_views_per_media_per_screen detailed_yt_shorts as avg_views_media_per_screen %}
+{% get_avg_views_per_media_qty detailed_yt_shorts as avg_views_media_qty %}
+{% get_avg_views_per_text_usage detailed_yt_shorts "start" as avg_views_start_text %}
+{% get_avg_views_per_text_usage detailed_yt_shorts "end" as avg_views_end_text %}
+
+{% get_engagement_rate_by_content_group detailed_yt_shorts as engagement_chart_data %}
+{% get_avg_engagement_per_video_type detailed_yt_shorts as avg_engagement_video_type %}
+{% get_avg_engagement_per_song_type detailed_yt_shorts as avg_engagement_song_type %}
+{% get_avg_engagement_per_song_title detailed_yt_shorts as avg_engagement_song_title %}
+{% get_avg_engagement_per_background detailed_yt_shorts as avg_engagement_background %}
+{% get_avg_engagement_per_media_per_screen detailed_yt_shorts as avg_engagement_media_per_screen %}
+{% get_avg_engagement_per_media_qty detailed_yt_shorts as avg_engagement_media_qty %}
+{% get_avg_engagement_per_start_text detailed_yt_shorts as avg_engagement_start_text %}
+{% get_avg_engagement_per_end_text detailed_yt_shorts as avg_engagement_end_text %}
+
+{% get_avg_watch_percentage_per_content_group detailed_yt_shorts as avg_watch_percentage_content_group %}
+{% get_avg_watch_percentage_per_video_type detailed_yt_shorts as avg_watch_percentage_video_type %}
+{% get_avg_watch_percentage_per_song_type detailed_yt_shorts as avg_watch_percentage_song_type %}
+{% get_avg_watch_percentage_per_song_title detailed_yt_shorts as avg_watch_percentage_song_title %}
+{% get_avg_watch_percentage_per_background detailed_yt_shorts as avg_watch_percentage_background %}
+{% get_avg_watch_percentage_per_media_per_screen detailed_yt_shorts as avg_watch_percentage_media_per_screen %}
+{% get_avg_watch_percentage_per_media_qty detailed_yt_shorts as avg_watch_percentage_media_qty %}
+{% get_avg_watch_percentage_per_start_text detailed_yt_shorts as avg_watch_percentage_start_text %}
+{% get_avg_watch_percentage_per_end_text detailed_yt_shorts as avg_watch_percentage_end_text %}
+
+{% get_video_length_vs_view_metrics detailed_yt_shorts as video_length_vs_view_metrics %}
+{% get_avg_views_per_shorts_posted detailed_yt_shorts as avg_views_per_shorts_posted %}
+{% get_avg_views_per_day_of_week detailed_yt_shorts as avg_views_per_day_of_week %}
+
+<script>
+    const initializeDetailedCharts = () => {
+        function initializePieChart(ctx, labels, values, tooltipLabel) {
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: tooltipLabel,
+                        data: values,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(255, 206, 86, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(153, 102, 255, 0.6)',
+                            'rgba(255, 159, 64, 0.6)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 10 },
+                                padding: 8,
+                                boxWidth: 12
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => `${context.label}: ${context.raw.toFixed(2)} ${tooltipLabel}`
+                            }
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            top: 10
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize all pie charts
+        const viewsDistributionChartCtx = document.getElementById('viewsDistributionChart').getContext('2d');
+        initializePieChart(viewsDistributionChartCtx, {{ chart_data.labels|safe }}, {{ chart_data.values|safe }}, 'avg views');
+
+        const avgViewsPerVideoTypeCtx = document.getElementById('avgViewsPerVideoTypeChart').getContext('2d');
+        initializePieChart(avgViewsPerVideoTypeCtx, {{ avg_views_video_type.labels|safe }}, {{ avg_views_video_type.values|safe }}, 'avg views');
+
+        const avgViewsPerSongTypeCtx = document.getElementById('avgViewsPerSongTypeChart').getContext('2d');
+        initializePieChart(avgViewsPerSongTypeCtx, {{ avg_views_song_type.labels|safe }}, {{ avg_views_song_type.values|safe }}, 'avg views');
+
+        const avgViewsPerSongTitleCtx = document.getElementById('avgViewsPerSongTitleChart').getContext('2d');
+        initializePieChart(avgViewsPerSongTitleCtx, {{ avg_views_song_title.labels|safe }}, {{ avg_views_song_title.values|safe }}, 'avg views');
+
+        // Chart 6: Average Views per Background
+        const avgViewsPerBackgroundCtx = document.getElementById('avgViewsPerBackgroundChart').getContext('2d');
+        initializePieChart(avgViewsPerBackgroundCtx, {{ avg_views_background.labels|safe }}, {{ avg_views_background.values|safe }}, 'avg views');
+
+        // Chart 7: Average Views per Media per Screen
+        const avgViewsPerMediaPerScreenCtx = document.getElementById('avgViewsPerMediaPerScreenChart').getContext('2d');
+        initializePieChart(avgViewsPerMediaPerScreenCtx, {{ avg_views_media_per_screen.labels|safe }}, {{ avg_views_media_per_screen.values|safe }}, 'avg views');
+
+        // Chart 8: Average Views per Media Quantity
+        const avgViewsPerMediaQtyCtx = document.getElementById('avgViewsPerMediaQtyChart').getContext('2d');
+        initializePieChart(avgViewsPerMediaQtyCtx, {{ avg_views_media_qty.labels|safe }}, {{ avg_views_media_qty.values|safe }}, 'avg views');
+
+        // Chart 9: Average Views per Start Text Usage
+        const avgViewsStartTextCtx = document.getElementById('avgViewsStartTextChart').getContext('2d');
+        initializePieChart(avgViewsStartTextCtx, {{ avg_views_start_text.labels|safe }}, {{ avg_views_start_text.values|safe }}, 'avg views');
+
+        // Chart 10: Average Views per End Text Usage
+        const avgViewsEndTextCtx = document.getElementById('avgViewsEndTextChart').getContext('2d');
+        initializePieChart(avgViewsEndTextCtx, {{ avg_views_end_text.labels|safe }}, {{ avg_views_end_text.values|safe }}, 'avg views');
+
+        function initializeStackedBarChart(ctx, labels, datasets) {
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 10 },
+                                padding: 8,
+                                boxWidth: 12
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const label = context.dataset.label || '';
+                                    const value = context.raw.toFixed(2);
+                                    return `${label}: ${value}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            grid: { display: false },
+                            title: { display: true, text: 'Category' }
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                            title: { display: true, text: 'Average Engagement' }
+                        }
+                    }
+                }
+            });
+        }
+
+        const engagementRateByContentGroupCtx = document.getElementById('engagementRateByContentGroupChart').getContext('2d');
+        initializeStackedBarChart(engagementRateByContentGroupCtx , {{ engagement_chart_data.labels|safe }}, {{ engagement_chart_data.datasets|safe }});
+
+        const engagementPerVideoTypeCtx = document.getElementById('engagementPerVideoTypeChart').getContext('2d');
+        initializeStackedBarChart(engagementPerVideoTypeCtx, {{ avg_engagement_video_type.labels|safe }}, {{ avg_engagement_video_type.datasets|safe }});
+
+        const engagementPerSongTypeCtx = document.getElementById('engagementPerSongTypeChart').getContext('2d');
+        initializeStackedBarChart(engagementPerSongTypeCtx, {{ avg_engagement_song_type.labels|safe }}, {{ avg_engagement_song_type.datasets|safe }});
+
+        const engagementPerSongTitleCtx = document.getElementById('engagementPerSongTitleChart').getContext('2d');
+        initializeStackedBarChart(engagementPerSongTitleCtx, {{ avg_engagement_song_title.labels|safe }}, {{ avg_engagement_song_title.datasets|safe }});
+
+        const engagementPerBackgroundCtx = document.getElementById('engagementPerBackgroundChart').getContext('2d');
+        initializeStackedBarChart(engagementPerBackgroundCtx, {{ avg_engagement_background.labels|safe }}, {{ avg_engagement_background.datasets|safe }});
+
+        const engagementPerMediaPerScreenCtx = document.getElementById('engagementPerMediaPerScreenChart').getContext('2d');
+        initializeStackedBarChart(engagementPerMediaPerScreenCtx, {{ avg_engagement_media_per_screen.labels|safe }}, {{ avg_engagement_media_per_screen.datasets|safe }});
+
+        const engagementPerMediaQtyCtx = document.getElementById('engagementPerMediaQtyChart').getContext('2d');
+        initializeStackedBarChart(engagementPerMediaQtyCtx, {{ avg_engagement_media_qty.labels|safe }}, {{ avg_engagement_media_qty.datasets|safe }});
+
+        const engagementPerStartTextCtx = document.getElementById('engagementPerStartTextChart').getContext('2d');
+        initializeStackedBarChart(engagementPerStartTextCtx, {{ avg_engagement_start_text.labels|safe }}, {{ avg_engagement_start_text.datasets|safe }});
+
+        const engagementPerEndTextCtx = document.getElementById('engagementPerEndTextChart').getContext('2d');
+        initializeStackedBarChart(engagementPerEndTextCtx, {{ avg_engagement_end_text.labels|safe }}, {{ avg_engagement_end_text.datasets|safe }});
+
+            // Initialize all watch percentage charts
+        const avgWatchPercentagePerContentGroupCtx = document.getElementById('avgWatchPercentagePerContentGroupChart').getContext('2d');
+        initializePieChart(avgWatchPercentagePerContentGroupCtx, {{ avg_watch_percentage_content_group.labels|safe }}, {{ avg_watch_percentage_content_group.values|safe }}, 'avg watch %');
+
+        const avgWatchPercentagePerVideoTypeCtx = document.getElementById('avgWatchPercentagePerVideoTypeChart').getContext('2d');
+        initializePieChart(avgWatchPercentagePerVideoTypeCtx, {{ avg_watch_percentage_video_type.labels|safe }}, {{ avg_watch_percentage_video_type.values|safe }}, 'avg watch %');
+
+        const avgWatchPercentagePerSongTypeCtx = document.getElementById('avgWatchPercentagePerSongTypeChart').getContext('2d');
+        initializePieChart(avgWatchPercentagePerSongTypeCtx, {{ avg_watch_percentage_song_type.labels|safe }}, {{ avg_watch_percentage_song_type.values|safe }}, 'avg watch %');
+
+        const avgWatchPercentagePerSongTitleCtx = document.getElementById('avgWatchPercentagePerSongTitleChart').getContext('2d');
+        initializePieChart(avgWatchPercentagePerSongTitleCtx, {{ avg_watch_percentage_song_title.labels|safe }}, {{ avg_watch_percentage_song_title.values|safe }}, 'avg watch %');
+
+        const avgWatchPercentagePerBackgroundCtx = document.getElementById('avgWatchPercentagePerBackgroundChart').getContext('2d');
+        initializePieChart(avgWatchPercentagePerBackgroundCtx, {{ avg_watch_percentage_background.labels|safe }}, {{ avg_watch_percentage_background.values|safe }}, 'avg watch %');
+
+        const avgWatchPercentagePerMediaPerScreenCtx = document.getElementById('avgWatchPercentagePerMediaPerScreenChart').getContext('2d');
+        initializePieChart(avgWatchPercentagePerMediaPerScreenCtx, {{ avg_watch_percentage_media_per_screen.labels|safe }}, {{ avg_watch_percentage_media_per_screen.values|safe }}, 'avg watch %');
+
+        const avgWatchPercentagePerMediaQtyCtx = document.getElementById('avgWatchPercentagePerMediaQtyChart').getContext('2d');
+        initializePieChart(avgWatchPercentagePerMediaQtyCtx, {{ avg_watch_percentage_media_qty.labels|safe }}, {{ avg_watch_percentage_media_qty.values|safe }}, 'avg watch %');
+
+        const avgWatchPercentagePerStartTextCtx = document.getElementById('avgWatchPercentagePerStartTextChart').getContext('2d');
+        initializePieChart(avgWatchPercentagePerStartTextCtx, {{ avg_watch_percentage_start_text.labels|safe }}, {{ avg_watch_percentage_start_text.values|safe }}, 'avg watch %');
+
+        const avgWatchPercentagePerEndTextCtx = document.getElementById('avgWatchPercentagePerEndTextChart').getContext('2d');
+        initializePieChart(avgWatchPercentagePerEndTextCtx, {{ avg_watch_percentage_end_text.labels|safe }}, {{ avg_watch_percentage_end_text.values|safe }}, 'avg watch %');
+
+        const videoLengthVsViewMetricsCtx = document.getElementById('videoLengthVsViewMetricsChart').getContext('2d');
+        const videoLengthVsViewMetricsData = {{ video_length_vs_view_metrics|safe }}
+
+        const datasets = [
+            {
+                label: 'Video Length vs. Average View Percentage',
+                data: videoLengthVsViewMetricsData.video_lengths.map((length, index) => ({
+                    x: length,
+                    y: videoLengthVsViewMetricsData.avg_view_percentages[index]
+                })),
+                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Video Length vs. Average View Duration',
+                data: videoLengthVsViewMetricsData.video_lengths.map((length, index) => ({
+                    x: length,
+                    y: videoLengthVsViewMetricsData.avg_view_durations[index]
+                })),
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }
+        ];
+
+        // Initialize the chart
+        new Chart(videoLengthVsViewMetricsCtx, {
+            type: 'scatter',
+            data: {
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { size: 10 },
+                            padding: 8,
+                            boxWidth: 12
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => {
+                                const datasetLabel = context.dataset.label || '';
+                                const x = context.raw.x.toFixed(2);
+                                const y = context.raw.y.toFixed(2);
+                                return `${datasetLabel}: (${x}, ${y})`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Video Length (seconds)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Average View Percentage/Duration'
+                        }
+                    }
+                }
+            }
+        });
+
+        const avgViewsPerShortsPostedCtx = document.getElementById('avgViewsPerShortsPostedChart').getContext('2d');
+        initializePieChart(avgViewsPerShortsPostedCtx, {{ avg_views_per_shorts_posted.labels|safe }}, {{ avg_views_per_shorts_posted.values|safe }}, 'avg views');
+
+        const avgViewsPerDayOfWeekCtx = document.getElementById('avgViewsPerDayOfWeekChart').getContext('2d');
+        new Chart(avgViewsPerDayOfWeekCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ avg_views_per_day_of_week.labels|safe }},
+                datasets: [{
+                    label: 'Average Views',
+                    data: {{ avg_views_per_day_of_week.values|safe }},
+                    backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => `${context.label}: ${context.raw.toFixed(2)} avg views`
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Day of the Week'
+                        },
+                        grid: { display: false }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Average Views'
+                        },
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                    }
+                }
+            }
+        });
+}
+</script>

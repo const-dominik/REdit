@@ -75,56 +75,20 @@
                 </p>
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
-                <h2 class="text-xl font-semibold">Average view duration (s)</h2>
+                <h2 class="text-xl font-semibold">Avg. view duration (s)</h2>
                 <p class="text-3xl font-bold text-indigo-500">
                     {{ yt_shorts|average:'averageViewDuration' }}
                 </p>
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
-                <h2 class="text-xl font-semibold">Average watch percentage (%)</h2>
+                <h2 class="text-xl font-semibold">Avg. watch %</h2>
                 <p class="text-3xl font-bold text-pink-500">
                     {{ yt_shorts|average:'averageViewPercentage' }}
                 </p>
             </div>
         </div>
 
-        <!-- YouTube Detailed Data Section -->
-        <div id="ytDetailedData" class="hidden">
-            <h2 class="text-2xl font-semibold text-center mb-4">Detailed YouTube Data</h2>
-            <table class="min-w-full bg-white shadow-lg rounded-lg">
-                <thead>
-                    <tr class="bg-gray-200 text-gray-600">
-                        <th class="p-2">Video Title</th>
-                        <th class="p-2">Views</th>
-                        <th class="p-2">Likes</th>
-                        <th class="p-2">Comments</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Placeholder for detailed data -->
-                    <tr>
-                        <td class="p-2 border">Video 1 Title</td>
-                        <td class="p-2 border">DATA WILL BE HERE</td>
-                        <td class="p-2 border">DATA WILL BE HERE</td>
-                        <td class="p-2 border">DATA WILL BE HERE</td>
-                    </tr>
-                    <tr>
-                        <td class="p-2 border">Video 2 Title</td>
-                        <td class="p-2 border">DATA WILL BE HERE</td>
-                        <td class="p-2 border">DATA WILL BE HERE</td>
-                        <td class="p-2 border">DATA WILL BE HERE</td>
-                    </tr>
-                    <tr>
-                        <td class="p-2 border">Video 3 Title</td>
-                        <td class="p-2 border">DATA WILL BE HERE</td>
-                        <td class="p-2 border">DATA WILL BE HERE</td>
-                        <td class="p-2 border">DATA WILL BE HERE</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="flex flex-wrap justify-center">
+        <div class="flex flex-wrap justify-center ">
             <div class="bg-white shadow-lg rounded-lg p-4 mb-6 flex-grow mx-1" style="flex: 1 1 calc(33.333% - 0.5rem);">
                 <h2 class="text-xl font-semibold text-center mb-2">Daily Views & Likes</h2>
                 <canvas id="viewsLikesChart" class="w-full h-32"></canvas>
@@ -155,13 +119,246 @@
                 <canvas id="likesVsDislikesChart" class="w-full h-32"></canvas>
             </div>
         </div>
+    </div>
+
+    <div id="ytDetailedData" class="hidden container mx-auto px-4">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-800 mb-2">Section 1: Average Views per X</h1>
+            <p class="text-gray-600">Analyzing average views across different categories.</p>
+        </div>
+        <div class="flex flex-wrap gap-4 justify-center p-4">
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Short by Content Group</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="viewsDistributionChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+        
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Video Type</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgViewsPerVideoTypeChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Song Type</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgViewsPerSongTypeChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Song Title</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgViewsPerSongTitleChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Background</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgViewsPerBackgroundChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Media per Screen</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgViewsPerMediaPerScreenChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Media Quantity</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgViewsPerMediaQtyChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Start Text Usage</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgViewsStartTextChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per End Text Usage</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgViewsEndTextChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-800 mb-2">Section 2: Average engagement per X</h1>
+            <p class="text-gray-600">Analyzing average engagement across different categories.</p>
+        </div>
+        <div class="flex flex-wrap gap-4 justify-center p-4">
+            <div class="w-96 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement Rate by Content Group</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id='engagementRateByContentGroupChart' class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-96 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement per Video Type</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="engagementPerVideoTypeChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-96 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement per Song Type</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="engagementPerSongTypeChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-96 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement per Song Title</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="engagementPerSongTitleChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-96 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement per Background</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="engagementPerBackgroundChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-96 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement per Media per Screen</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="engagementPerMediaPerScreenChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-96 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement per Media Quantity</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="engagementPerMediaQtyChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-96 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement per Start Text Usage</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="engagementPerStartTextChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-96 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement per End Text Usage</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="engagementPerEndTextChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-800 mb-2">Section 3: Average watch percentage per X</h1>
+            <p class="text-gray-600">Analyzing watch percentage across different categories.</p>
+        </div>
+        <div class="flex flex-wrap gap-4 justify-center p-4">
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per Content Group</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgWatchPercentagePerContentGroupChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per Video Type</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgWatchPercentagePerVideoTypeChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per Song Type</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgWatchPercentagePerSongTypeChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per Song Title</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgWatchPercentagePerSongTitleChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per Background</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgWatchPercentagePerBackgroundChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per Media per Screen</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgWatchPercentagePerMediaPerScreenChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per Media Quantity</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgWatchPercentagePerMediaQtyChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per Start Text Usage</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgWatchPercentagePerStartTextChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per End Text Usage</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgWatchPercentagePerEndTextChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-800 mb-2">Section 4: Other useful charts</h1>
+            <p class="text-gray-600">Anything we think might be useful or fun and doesn't fit to other sections</p>
+        </div>
+        <div class="flex flex-wrap gap-4 justify-center p-4">
+            <div class="w-96 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Video Length vs. View Percentage/Duration</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="videoLengthVsViewMetricsChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-72 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Amount of Shorts Posted That Day</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgViewsPerShortsPostedChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+
+            <div class="w-96 bg-white rounded-lg shadow-md p-4">
+                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Upload Day</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="avgViewsPerDayOfWeekChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
         
 
-    <!-- Placeholder for Instagram and TikTok dashboards -->
     <div id="instaDashboard" class="hidden">
         <h2 class="text-2xl font-semibold text-center mb-4">Instagram Analytics</h2>
         <p class="text-center">DATA WILL BE HERE</p>
-    </div>
 
     <div id="tiktokDashboard" class="hidden">
         <h2 class="text-2xl font-semibold text-center mb-4">TikTok Analytics</h2>
@@ -169,245 +366,22 @@
     </div>
 </div>
 
+{% include 'dashboard/scripts/general_charts.html'%}
+{% include 'dashboard/scripts/detailed_shorts_charts.html'%}
+
 <script>
-    // Combined Views and Likes
-    const combinedViewsLikesData = {
-        labels: {{ yt_shorts|pluck_field:'day'|safe }},
-        datasets: [
-            {
-                label: 'Daily Views',
-                data: {{ yt_shorts|pluck_field:'views'|safe }},
-                borderColor: '#4CAF50',
-                backgroundColor: 'rgba(76, 175, 80, 0.2)',
-                fill: true,
-                tension: 0.1
-            },
-            {
-                label: 'Daily Likes',
-                data: {{ yt_shorts|pluck_field:'likes'|safe }},
-                borderColor: '#2196F3',
-                backgroundColor: 'rgba(33, 150, 243, 0.2)',
-                fill: false,
-                tension: 0.1
-            }
-        ]
-    };
-
-    new Chart(document.getElementById('viewsLikesChart'), {
-        type: 'line',
-        data: combinedViewsLikesData,
-        options: {
-            responsive: true,
-            maintainaspectRatio: false,
-            scales: {
-                x: { title: { display: true, text: 'Date' } },
-                y: { title: { display: true, text: 'Count' } }
-            }
-        }
+    document.querySelector('#generalBtn').addEventListener("click", e => {
+        document.querySelector('#ytDashboard').classList.remove('hidden');
+        document.querySelector('#ytDetailedData').classList.add('hidden');
+        initializeGeneralCharts();
     });
 
-    // Combined Average Duration and Watch Percentage
-    const combinedAvgDurationWatchPercentageData = {
-        labels: {{ yt_shorts|pluck_field:'day'|safe }},
-        datasets: [
-            {
-                label: 'Average View Duration (s)',
-                data: {{ yt_shorts|pluck_field:'averageViewDuration'|safe }},
-                borderColor: '#FFEB3B',
-                backgroundColor: 'rgba(255, 235, 59, 0.2)',
-                fill: true,
-                tension: 0.1
-            },
-            {
-                label: 'Watch Percentage (%)',
-                data: {{ yt_shorts|pluck_field:'averageViewPercentage'|safe }},
-                borderColor: '#FF5722',
-                backgroundColor: 'rgba(255, 87, 34, 0.2)',
-                fill: false,
-                tension: 0.1
-            }
-        ]
-    };
-
-    new Chart(document.getElementById('avgViewDurationWatchPercentageChart'), {
-        type: 'line',
-        data: combinedAvgDurationWatchPercentageData,
-        options: {
-            responsive: true,
-            maintainaspectRatio: false,
-            scales: {
-                x: { title: { display: true, text: 'Date' } },
-                y: { title: { display: true, text: 'Count / Percentage' } }
-            }
-        }
+    document.querySelector('#detailedBtn').addEventListener("click", e => {
+        document.querySelector('#ytDashboard').classList.add('hidden');
+        document.querySelector('#ytDetailedData').classList.remove('hidden');
+        initializeDetailedCharts();
     });
 
-    const engagementOverTimeData = {
-        labels: {{ yt_shorts|pluck_field:'day'|safe }},
-        datasets: [{
-            label: 'Total Engagement',
-            data: {{ yt_shorts|total_engagement:"likes,comments,shares" }},
-            borderColor: '#FF5722',
-            backgroundColor: 'rgba(255, 87, 34, 0.2)',
-            fill: true,
-            tension: 0.1
-        }, {
-            label: 'Likes',
-            data: {{ yt_shorts|pluck_field:'likes'|safe }},
-            borderColor: '#2196F3',
-            backgroundColor: 'rgba(33, 150, 243, 0.2)',
-            fill: false,
-            borderDash: [5, 5],
-            tension: 0.1
-        }, {
-            label: 'Comments',
-            data: {{ yt_shorts|pluck_field:'comments'|safe }},
-            borderColor: '#FFEB3B',
-            backgroundColor: 'rgba(255, 235, 59, 0.2)',
-            fill: false,
-            borderDash: [5, 5],
-            tension: 0.1
-        }, {
-            label: 'Shares',
-            data: {{ yt_shorts|pluck_field:'shares'|default:0 }},
-            borderColor: '#4CAF50',
-            backgroundColor: 'rgba(76, 175, 80, 0.2)',
-            fill: false,
-            borderDash: [5, 5],
-            tension: 0.1
-
-        }]
-    };
-    
-    new Chart(document.getElementById('engagementChart'), {
-        type: 'line',
-        data: engagementOverTimeData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: { title: { display: true, text: 'Date' } },
-                y: { title: { display: true, text: 'Engagement' } }
-            }
-        }
-    });
-
-
-
-    const subscribersData = {
-        labels: {{ yt_shorts|pluck_field:'day'|safe }},
-        datasets: [
-            {
-                label: 'Subscribers Gained',
-                data: {{ yt_shorts|pluck_field:'subscribersGained'|safe }},
-                borderColor: '#3F51B5',
-                backgroundColor: 'rgba(63, 81, 181, 0.2)',
-                fill: true,
-                tension: 0.1
-            },
-            {
-                label: 'Subscribers Lost',
-                data: {{ yt_shorts|pluck_field:'subscribersLost'|safe }},
-                borderColor: '#F44336',
-                backgroundColor: 'rgba(244, 67, 54, 0.2)',
-                fill: true,
-                tension: 0.1
-            }
-        ]
-    };
-
-    new Chart(document.getElementById('subscribersChart'), {
-        type: 'line',
-        data: subscribersData,
-        options: {
-            responsive: true,
-            maintainaspectRatio: false,
-            scales: {
-                x: { title: { display: true, text: 'Date' } },
-                y: { title: { display: true, text: 'Subscribers' } }
-            }
-        }
-    });
-
-    const viewsVsMinutesData = {
-        labels: {{ yt_shorts|pluck_field:'day'|safe }},
-        datasets: [
-            {
-                label: 'Views',
-                data: {{ yt_shorts|pluck_field:'views'|safe }},
-                borderColor: '#009688',
-                backgroundColor: 'rgba(0, 150, 136, 0.2)',
-                fill: true,
-                tension: 0.1
-            },
-            {
-                label: 'Minutes Watched',
-                data: {{ yt_shorts|pluck_field:'estimatedMinutesWatched'|safe }},
-                borderColor: '#FF9800',
-                backgroundColor: 'rgba(255, 152, 0, 0.2)',
-                fill: true,
-                tension: 0.1
-            }
-        ]
-    };
-
-    new Chart(document.getElementById('viewsVsMinutesChart'), {
-        type: 'line',
-        data: viewsVsMinutesData,
-        options: {
-            responsive: true,
-            maintainaspectRatio: false,
-            scales: {
-                x: { title: { display: true, text: 'Date' } },
-                y: { title: { display: true, text: 'Count' } }
-            }
-        }
-    });
-
-    const likesVsDislikesData = {
-        labels: {{ yt_shorts|pluck_field:'day'|safe }},
-        datasets: [
-            {
-                label: 'Likes',
-                data: {{ yt_shorts|pluck_field:'likes'|safe }},
-                borderColor: '#4CAF50',
-                backgroundColor: 'rgba(76, 175, 80, 0.2)',
-                fill: true,
-                tension: 0.1
-            },
-            {
-                label: 'Dislikes',
-                data: {{ yt_shorts|pluck_field:'dislikes'|safe }},
-                borderColor: '#F44336',
-                backgroundColor: 'rgba(244, 67, 54, 0.2)',
-                fill: true,
-                tension: 0.1
-            }
-        ]
-    };
-
-    new Chart(document.getElementById('likesVsDislikesChart'), {
-        type: 'line',
-        data: likesVsDislikesData,
-        options: {
-            responsive: true,
-            maintainaspectRatio: false,
-            scales: {
-                x: { title: { display: true, text: 'Date' } },
-                y: { title: { display: true, text: 'Count' } }
-            }
-        }
-    });
-
-
-    document.getElementById('generalBtn').onclick = function() {
-        document.getElementById('ytDashboard').classList.remove('hidden');
-        document.getElementById('ytDetailedData').classList.add('hidden');
-    };
-
-    document.getElementById('detailedBtn').onclick = function() {
-        document.getElementById('ytDashboard').classList.add('hidden');
-        document.getElementById('ytDetailedData').classList.remove('hidden');
-    };
+    document.addEventListener("DOMContentLoaded", initializeGeneralCharts);
 </script>
 {% endblock %}

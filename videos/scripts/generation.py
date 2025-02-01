@@ -155,6 +155,7 @@ def generate_media_video(content_group, media_type="img"):
         "video_type": content_group.type,
         "start_text": content_group.start_text,
         "end_text": content_group.end_text,
+        "audio_used": audio_path,
     }
 
     with open(temp_video_path, "rb") as video_file:

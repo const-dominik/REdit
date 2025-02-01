@@ -2,15 +2,15 @@ from django.contrib import admin
 from videos.models import UploadedVideo, GeneratedVideo
 
 
-# Register your models here.
 @admin.register(GeneratedVideo)
 class GeneratedVideoAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "content_group",
+        "meta_data",
         "created_at",
-    )  # Customize the fields displayed in the admin list view
-    search_fields = ("content_group__name",)  # Adjust based on your ContentGroup model
+    )
+    search_fields = ("content_group__name",)
 
 
 @admin.register(UploadedVideo)
@@ -19,6 +19,6 @@ class UploadedVideoAdmin(admin.ModelAdmin):
         "video",
         "platform",
         "uploaded_video_id",
-    )  # Customize fields here too
-    list_filter = ("platform",)  # Add filter options
-    search_fields = ("uploaded_video_id",)  # Enable searching by uploaded_video_id
+    )
+    list_filter = ("platform",)
+    search_fields = ("uploaded_video_id",)

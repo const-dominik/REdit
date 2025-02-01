@@ -26,6 +26,20 @@ def yt_response_to_np(response):
     return structured_array
 
 
+def yt_response_to_dict(response, key="video"):
+    column_headers = response["columnHeaders"]
+    rows = response["rows"]
+
+    res_dict = {}
+
+    for row in rows:
+        res_dict[row[0]] = {}
+        for value, column in zip(row[1:], column_headers[1:]):
+            res_dict[row[0]][column["name"]] = value
+
+    return res_dict
+
+
 def get_stats_analytics(start_date="2025-01-21", end_date="2026-01-31"):
     service = authenticate("youtubeAnalytics", "v2")
 
@@ -53,7 +67,6 @@ def get_shorts_analytics(shorts_ids, start_date="2025-01-01", end_date="2026-01-
 
     try:
         shorts_ids_str = ",".join(shorts_ids)
-        print(shorts_ids_str)
         response = (
             service.reports()
             .query(
@@ -66,7 +79,7 @@ def get_shorts_analytics(shorts_ids, start_date="2025-01-01", end_date="2026-01-
             )
             .execute()
         )
-        return yt_response_to_np(response)
+        return yt_response_to_dict(response)
     except Exception as e:
         print(f"An error occurred: {e}")
         return None

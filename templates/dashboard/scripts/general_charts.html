@@ -1,0 +1,233 @@
+{% load analytics_filters static %}
+
+<script>
+    const initializeGeneralCharts = () => {
+        const combinedViewsLikesData = {
+            labels: {{ yt_shorts|pluck_field:'day'|safe }},
+            datasets: [
+                {
+                    label: 'Daily Views',
+                    data: {{ yt_shorts|pluck_field:'views'|safe }},
+                    borderColor: '#4CAF50',
+                    backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                    fill: true,
+                    tension: 0.1
+                },
+                {
+                    label: 'Daily Likes',
+                    data: {{ yt_shorts|pluck_field:'likes'|safe }},
+                    borderColor: '#2196F3',
+                    backgroundColor: 'rgba(33, 150, 243, 0.2)',
+                    fill: false,
+                    tension: 0.1
+                }
+            ]
+        };
+
+        new Chart(document.getElementById('viewsLikesChart'), {
+            type: 'line',
+            data: combinedViewsLikesData,
+            options: {
+                responsive: true,
+                maintainaspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Date' } },
+                    y: { title: { display: true, text: 'Count' } }
+                }
+            }
+        });
+
+        // Combined Average Duration and Watch Percentage
+        const combinedAvgDurationWatchPercentageData = {
+            labels: {{ yt_shorts|pluck_field:'day'|safe }},
+            datasets: [
+                {
+                    label: 'Average View Duration (s)',
+                    data: {{ yt_shorts|pluck_field:'averageViewDuration'|safe }},
+                    borderColor: '#FFEB3B',
+                    backgroundColor: 'rgba(255, 235, 59, 0.2)',
+                    fill: true,
+                    tension: 0.1
+                },
+                {
+                    label: 'Watch Percentage (%)',
+                    data: {{ yt_shorts|pluck_field:'averageViewPercentage'|safe }},
+                    borderColor: '#FF5722',
+                    backgroundColor: 'rgba(255, 87, 34, 0.2)',
+                    fill: false,
+                    tension: 0.1
+                }
+            ]
+        };
+
+        new Chart(document.getElementById('avgViewDurationWatchPercentageChart'), {
+            type: 'line',
+            data: combinedAvgDurationWatchPercentageData,
+            options: {
+                responsive: true,
+                maintainaspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Date' } },
+                    y: { title: { display: true, text: 'Count / Percentage' } }
+                }
+            }
+        });
+
+        const engagementOverTimeData = {
+            labels: {{ yt_shorts|pluck_field:'day'|safe }},
+            datasets: [{
+                label: 'Total Engagement',
+                data: {{ yt_shorts|total_engagement:"likes,comments,shares" }},
+                borderColor: '#FF5722',
+                backgroundColor: 'rgba(255, 87, 34, 0.2)',
+                fill: true,
+                tension: 0.1
+            }, {
+                label: 'Likes',
+                data: {{ yt_shorts|pluck_field:'likes'|safe }},
+                borderColor: '#2196F3',
+                backgroundColor: 'rgba(33, 150, 243, 0.2)',
+                fill: false,
+                borderDash: [5, 5],
+                tension: 0.1
+            }, {
+                label: 'Comments',
+                data: {{ yt_shorts|pluck_field:'comments'|safe }},
+                borderColor: '#FFEB3B',
+                backgroundColor: 'rgba(255, 235, 59, 0.2)',
+                fill: false,
+                borderDash: [5, 5],
+                tension: 0.1
+            }, {
+                label: 'Shares',
+                data: {{ yt_shorts|pluck_field:'shares'|default:0 }},
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                fill: false,
+                borderDash: [5, 5],
+                tension: 0.1
+
+            }]
+        };
+        
+        new Chart(document.getElementById('engagementChart'), {
+            type: 'line',
+            data: engagementOverTimeData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Date' } },
+                    y: { title: { display: true, text: 'Engagement' } }
+                }
+            }
+        });
+
+
+
+        const subscribersData = {
+            labels: {{ yt_shorts|pluck_field:'day'|safe }},
+            datasets: [
+                {
+                    label: 'Subscribers Gained',
+                    data: {{ yt_shorts|pluck_field:'subscribersGained'|safe }},
+                    borderColor: '#3F51B5',
+                    backgroundColor: 'rgba(63, 81, 181, 0.2)',
+                    fill: true,
+                    tension: 0.1
+                },
+                {
+                    label: 'Subscribers Lost',
+                    data: {{ yt_shorts|pluck_field:'subscribersLost'|safe }},
+                    borderColor: '#F44336',
+                    backgroundColor: 'rgba(244, 67, 54, 0.2)',
+                    fill: true,
+                    tension: 0.1
+                }
+            ]
+        };
+
+        new Chart(document.getElementById('subscribersChart'), {
+            type: 'line',
+            data: subscribersData,
+            options: {
+                responsive: true,
+                maintainaspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Date' } },
+                    y: { title: { display: true, text: 'Subscribers' } }
+                }
+            }
+        });
+
+        const viewsVsMinutesData = {
+            labels: {{ yt_shorts|pluck_field:'day'|safe }},
+            datasets: [
+                {
+                    label: 'Views',
+                    data: {{ yt_shorts|pluck_field:'views'|safe }},
+                    borderColor: '#009688',
+                    backgroundColor: 'rgba(0, 150, 136, 0.2)',
+                    fill: true,
+                    tension: 0.1
+                },
+                {
+                    label: 'Minutes Watched',
+                    data: {{ yt_shorts|pluck_field:'estimatedMinutesWatched'|safe }},
+                    borderColor: '#FF9800',
+                    backgroundColor: 'rgba(255, 152, 0, 0.2)',
+                    fill: true,
+                    tension: 0.1
+                }
+            ]
+        };
+
+        new Chart(document.getElementById('viewsVsMinutesChart'), {
+            type: 'line',
+            data: viewsVsMinutesData,
+            options: {
+                responsive: true,
+                maintainaspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Date' } },
+                    y: { title: { display: true, text: 'Count' } }
+                }
+            }
+        });
+
+        const likesVsDislikesData = {
+            labels: {{ yt_shorts|pluck_field:'day'|safe }},
+            datasets: [
+                {
+                    label: 'Likes',
+                    data: {{ yt_shorts|pluck_field:'likes'|safe }},
+                    borderColor: '#4CAF50',
+                    backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                    fill: true,
+                    tension: 0.1
+                },
+                {
+                    label: 'Dislikes',
+                    data: {{ yt_shorts|pluck_field:'dislikes'|safe }},
+                    borderColor: '#F44336',
+                    backgroundColor: 'rgba(244, 67, 54, 0.2)',
+                    fill: true,
+                    tension: 0.1
+                }
+            ]
+        };
+
+        new Chart(document.getElementById('likesVsDislikesChart'), {
+            type: 'line',
+            data: likesVsDislikesData,
+            options: {
+                responsive: true,
+                maintainaspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Date' } },
+                    y: { title: { display: true, text: 'Count' } }
+                }
+            }
+        });
+    }
+</script>
