@@ -2,14 +2,19 @@ import numpy as np
 from numpy.lib import recfunctions as rfn
 
 from django.views.generic import TemplateView
-from dashboard.scripts import get_stats_analytics, get_shorts_analytics
+from dashboard.scripts import (
+    get_stats_analytics,
+    get_shorts_analytics,
+    get_reels_analytics,
+    get_all_media_insights,
+)
 
 from videos.models import UploadedVideo
 
 
 def parse_audio_type(audio_path):
-    _, audio = audio_path.split(r"audios\\")
-    song_type, song = audio.split(r"\\")
+    _, audio = audio_path.split("audios\\")
+    song_type, song = audio.split("\\")
     song_title, _ = song.split(".")
 
     return song_type, song_title
@@ -28,7 +33,7 @@ def get_detailed_data(data, videos):
         if video_id in available_videos_ids:
             entry = data[video_id]
             if "audio_used" in video_data:
-                song_type, song_title = parse_audio_type(video_data["audio_data"])
+                song_type, song_title = parse_audio_type(video_data["audio_used"])
                 entry["song_type"] = song_type
                 entry["song_title"] = song_title
             else:
@@ -57,13 +62,24 @@ class Dashboard(TemplateView):
 
         # fetch data for yt shorts
         context["yt_shorts"] = get_stats_analytics()
+
         videos = UploadedVideo.objects.filter(platform="Youtube")
         video_ids = list(videos.values_list("uploaded_video_id", flat=True))
 
         shorts_data = get_shorts_analytics(list(video_ids))
         detailed_data = get_detailed_data(shorts_data, videos)
-
-        print(detailed_data)
         context["detailed_yt_shorts"] = detailed_data
 
+        # reels
+        context["reels"] = get_reels_analytics()
+        insights = get_all_media_insights()
+
+        videos = UploadedVideo.objects.filter(platform="Instagram")
+        video_ids = list(videos.values_list("uploaded_video_id", flat=True))
+
+        insights_for_reels_in_db = {
+            field: insights[field] for field in insights if field in video_ids
+        }
+
+        context["detailed_reels"] = get_detailed_data(insights_for_reels_in_db, videos)
         return context

@@ -36,7 +36,7 @@
 
 <script>
     const initializeDetailedCharts = () => {
-        function initializePieChart(ctx, labels, values, tooltipLabel) {
+        const initializePieChart = (ctx, labels, values, tooltipLabel) => {
             new Chart(ctx, {
                 type: 'pie',
                 data: {
@@ -82,40 +82,7 @@
             });
         }
 
-        // Initialize all pie charts
-        const viewsDistributionChartCtx = document.getElementById('viewsDistributionChart').getContext('2d');
-        initializePieChart(viewsDistributionChartCtx, {{ chart_data.labels|safe }}, {{ chart_data.values|safe }}, 'avg views');
-
-        const avgViewsPerVideoTypeCtx = document.getElementById('avgViewsPerVideoTypeChart').getContext('2d');
-        initializePieChart(avgViewsPerVideoTypeCtx, {{ avg_views_video_type.labels|safe }}, {{ avg_views_video_type.values|safe }}, 'avg views');
-
-        const avgViewsPerSongTypeCtx = document.getElementById('avgViewsPerSongTypeChart').getContext('2d');
-        initializePieChart(avgViewsPerSongTypeCtx, {{ avg_views_song_type.labels|safe }}, {{ avg_views_song_type.values|safe }}, 'avg views');
-
-        const avgViewsPerSongTitleCtx = document.getElementById('avgViewsPerSongTitleChart').getContext('2d');
-        initializePieChart(avgViewsPerSongTitleCtx, {{ avg_views_song_title.labels|safe }}, {{ avg_views_song_title.values|safe }}, 'avg views');
-
-        // Chart 6: Average Views per Background
-        const avgViewsPerBackgroundCtx = document.getElementById('avgViewsPerBackgroundChart').getContext('2d');
-        initializePieChart(avgViewsPerBackgroundCtx, {{ avg_views_background.labels|safe }}, {{ avg_views_background.values|safe }}, 'avg views');
-
-        // Chart 7: Average Views per Media per Screen
-        const avgViewsPerMediaPerScreenCtx = document.getElementById('avgViewsPerMediaPerScreenChart').getContext('2d');
-        initializePieChart(avgViewsPerMediaPerScreenCtx, {{ avg_views_media_per_screen.labels|safe }}, {{ avg_views_media_per_screen.values|safe }}, 'avg views');
-
-        // Chart 8: Average Views per Media Quantity
-        const avgViewsPerMediaQtyCtx = document.getElementById('avgViewsPerMediaQtyChart').getContext('2d');
-        initializePieChart(avgViewsPerMediaQtyCtx, {{ avg_views_media_qty.labels|safe }}, {{ avg_views_media_qty.values|safe }}, 'avg views');
-
-        // Chart 9: Average Views per Start Text Usage
-        const avgViewsStartTextCtx = document.getElementById('avgViewsStartTextChart').getContext('2d');
-        initializePieChart(avgViewsStartTextCtx, {{ avg_views_start_text.labels|safe }}, {{ avg_views_start_text.values|safe }}, 'avg views');
-
-        // Chart 10: Average Views per End Text Usage
-        const avgViewsEndTextCtx = document.getElementById('avgViewsEndTextChart').getContext('2d');
-        initializePieChart(avgViewsEndTextCtx, {{ avg_views_end_text.labels|safe }}, {{ avg_views_end_text.values|safe }}, 'avg views');
-
-        function initializeStackedBarChart(ctx, labels, datasets) {
+        const initializeStackedBarChart = (ctx, labels, datasets) => {
             new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -161,6 +128,41 @@
             });
         }
 
+        // Initialize all pie charts
+        const viewsDistributionChartCtx = document.getElementById('viewsDistributionChart').getContext('2d');
+        initializePieChart(viewsDistributionChartCtx, {{ chart_data.labels|safe }}, {{ chart_data.values|safe }}, 'avg views');
+
+        const avgViewsPerVideoTypeCtx = document.getElementById('avgViewsPerVideoTypeChart').getContext('2d');
+        initializePieChart(avgViewsPerVideoTypeCtx, {{ avg_views_video_type.labels|safe }}, {{ avg_views_video_type.values|safe }}, 'avg views');
+
+        const avgViewsPerSongTypeCtx = document.getElementById('avgViewsPerSongTypeChart').getContext('2d');
+        initializePieChart(avgViewsPerSongTypeCtx, {{ avg_views_song_type.labels|safe }}, {{ avg_views_song_type.values|safe }}, 'avg views');
+
+        const avgViewsPerSongTitleCtx = document.getElementById('avgViewsPerSongTitleChart').getContext('2d');
+        initializePieChart(avgViewsPerSongTitleCtx, {{ avg_views_song_title.labels|safe }}, {{ avg_views_song_title.values|safe }}, 'avg views');
+
+        // Chart 6: Average Views per Background
+        const avgViewsPerBackgroundCtx = document.getElementById('avgViewsPerBackgroundChart').getContext('2d');
+        initializePieChart(avgViewsPerBackgroundCtx, {{ avg_views_background.labels|safe }}, {{ avg_views_background.values|safe }}, 'avg views');
+
+        // Chart 7: Average Views per Media per Screen
+        const avgViewsPerMediaPerScreenCtx = document.getElementById('avgViewsPerMediaPerScreenChart').getContext('2d');
+        initializePieChart(avgViewsPerMediaPerScreenCtx, {{ avg_views_media_per_screen.labels|safe }}, {{ avg_views_media_per_screen.values|safe }}, 'avg views');
+
+        // Chart 8: Average Views per Media Quantity
+        const avgViewsPerMediaQtyCtx = document.getElementById('avgViewsPerMediaQtyChart').getContext('2d');
+        initializePieChart(avgViewsPerMediaQtyCtx, {{ avg_views_media_qty.labels|safe }}, {{ avg_views_media_qty.values|safe }}, 'avg views');
+
+        // Chart 9: Average Views per Start Text Usage
+        const avgViewsStartTextCtx = document.getElementById('avgViewsStartTextChart').getContext('2d');
+        initializePieChart(avgViewsStartTextCtx, {{ avg_views_start_text.labels|safe }}, {{ avg_views_start_text.values|safe }}, 'avg views');
+
+        // Chart 10: Average Views per End Text Usage
+        const avgViewsEndTextCtx = document.getElementById('avgViewsEndTextChart').getContext('2d');
+        initializePieChart(avgViewsEndTextCtx, {{ avg_views_end_text.labels|safe }}, {{ avg_views_end_text.values|safe }}, 'avg views');
+
+        
+
         const engagementRateByContentGroupCtx = document.getElementById('engagementRateByContentGroupChart').getContext('2d');
         initializeStackedBarChart(engagementRateByContentGroupCtx , {{ engagement_chart_data.labels|safe }}, {{ engagement_chart_data.datasets|safe }});
 
@@ -188,7 +190,6 @@
         const engagementPerEndTextCtx = document.getElementById('engagementPerEndTextChart').getContext('2d');
         initializeStackedBarChart(engagementPerEndTextCtx, {{ avg_engagement_end_text.labels|safe }}, {{ avg_engagement_end_text.datasets|safe }});
 
-            // Initialize all watch percentage charts
         const avgWatchPercentagePerContentGroupCtx = document.getElementById('avgWatchPercentagePerContentGroupChart').getContext('2d');
         initializePieChart(avgWatchPercentagePerContentGroupCtx, {{ avg_watch_percentage_content_group.labels|safe }}, {{ avg_watch_percentage_content_group.values|safe }}, 'avg watch %');
 

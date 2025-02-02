@@ -21,7 +21,7 @@
 <div class="container mx-auto py-4 px-6">
     <div class="flex mb-2">
         <div class="icon" id="ytIcon">
-            <img src="{% static 'images/youtube_icon.png' %}" alt="YouTube" width="32">
+            <img src="{% static 'images/youtube_icon.png' %}" alt="YouTube" width="32" class="border-2 border-green-300 rounded-full">
         </div>
         <div class="icon" id="instaIcon">
             <img src="{% static 'images/instagram_icon.png' %}" alt="Instagram" width="32">
@@ -122,266 +122,179 @@
     </div>
 
     <div id="ytDetailedData" class="hidden container mx-auto px-4">
-        <div class="text-center mb-8">
-            <h1 class="text-2xl font-bold text-gray-800 mb-2">Section 1: Average Views per X</h1>
-            <p class="text-gray-600">Analyzing average views across different categories.</p>
-        </div>
-        <div class="flex flex-wrap gap-4 justify-center p-4">
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Short by Content Group</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="viewsDistributionChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-        
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Video Type</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgViewsPerVideoTypeChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Song Type</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgViewsPerSongTypeChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Song Title</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgViewsPerSongTitleChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Background</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgViewsPerBackgroundChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Media per Screen</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgViewsPerMediaPerScreenChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Media Quantity</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgViewsPerMediaQtyChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Start Text Usage</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgViewsStartTextChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per End Text Usage</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgViewsEndTextChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="text-center mb-8">
-            <h1 class="text-2xl font-bold text-gray-800 mb-2">Section 2: Average engagement per X</h1>
-            <p class="text-gray-600">Analyzing average engagement across different categories.</p>
-        </div>
-        <div class="flex flex-wrap gap-4 justify-center p-4">
-            <div class="w-96 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement Rate by Content Group</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id='engagementRateByContentGroupChart' class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-96 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement per Video Type</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="engagementPerVideoTypeChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-96 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement per Song Type</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="engagementPerSongTypeChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-96 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement per Song Title</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="engagementPerSongTitleChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-96 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement per Background</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="engagementPerBackgroundChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-96 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement per Media per Screen</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="engagementPerMediaPerScreenChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-96 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement per Media Quantity</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="engagementPerMediaQtyChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-96 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement per Start Text Usage</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="engagementPerStartTextChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-96 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Engagement per End Text Usage</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="engagementPerEndTextChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="text-center mb-8">
-            <h1 class="text-2xl font-bold text-gray-800 mb-2">Section 3: Average watch percentage per X</h1>
-            <p class="text-gray-600">Analyzing watch percentage across different categories.</p>
-        </div>
-        <div class="flex flex-wrap gap-4 justify-center p-4">
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per Content Group</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgWatchPercentagePerContentGroupChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per Video Type</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgWatchPercentagePerVideoTypeChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per Song Type</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgWatchPercentagePerSongTypeChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per Song Title</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgWatchPercentagePerSongTitleChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per Background</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgWatchPercentagePerBackgroundChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per Media per Screen</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgWatchPercentagePerMediaPerScreenChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per Media Quantity</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgWatchPercentagePerMediaQtyChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per Start Text Usage</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgWatchPercentagePerStartTextChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Watch Percentage per End Text Usage</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgWatchPercentagePerEndTextChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="text-center mb-8">
-            <h1 class="text-2xl font-bold text-gray-800 mb-2">Section 4: Other useful charts</h1>
-            <p class="text-gray-600">Anything we think might be useful or fun and doesn't fit to other sections</p>
-        </div>
-        <div class="flex flex-wrap gap-4 justify-center p-4">
-            <div class="w-96 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Video Length vs. View Percentage/Duration</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="videoLengthVsViewMetricsChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-72 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Amount of Shorts Posted That Day</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgViewsPerShortsPostedChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-
-            <div class="w-96 bg-white rounded-lg shadow-md p-4">
-                <h4 class="text-center text-sm font-semibold text-gray-700 mb-2">Average Views per Upload Day</h4>
-                <div class="w-full h-48 relative">
-                    <canvas id="avgViewsPerDayOfWeekChart" class="w-full h-full"></canvas>
-                </div>
-            </div>
-        </div>
+        {% include 'dashboard/charts/detailed_shorts_charts.html' %}
     </div>
         
 
     <div id="instaDashboard" class="hidden">
-        <h2 class="text-2xl font-semibold text-center mb-4">Instagram Analytics</h2>
-        <p class="text-center">DATA WILL BE HERE</p>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-3">
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Total Views</h2>
+                <p class="text-3xl font-bold text-green-500">
+                    {{ reels.views }}
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Total Likes</h2>
+                <p class="text-3xl font-bold text-blue-500">
+                    {{ reels.likes }}
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Total Comments</h2>
+                <p class="text-3xl font-bold text-orange-500">
+                    {{ reels.comments }}
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Followers</h2>
+                <p class="text-3xl font-bold text-purple-600">
+                    {% if reels.follower_count %}
+                        {{ reels.follower_count }}
+                    {% else %}
+                        < 100 :(
+                    {% endif %}
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Accounts reached</h2>
+                <p class="text-3xl font-bold text-teal-500">
+                    {{ reels.reach }}
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Total Shares</h2>
+                <p class="text-3xl font-bold text-red-600">
+                    {{ reels.shares }}
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Total Engagements</h2>
+                <p class="text-3xl font-bold text-indigo-500">
+                    {{ reels.accounts_engaged }}
+                </p>
+            </div>
+        </div>
+        <img src="{% static 'images/dog.jpg' %}" alt="samoyeds" class="w-1/2 h-auto mx-auto"/>
+    </div>
+
+    <div id="igDetailedData" class="hidden container mx-auto px-4">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Avg. watch %</h2>
+                <p class="text-3xl font-bold text-pink-500">
+                    {{ detailed_reels|average_watch_time }}
+                </p>
+            </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h2 class="text-xl font-semibold">Total minutes watched</h2>
+                <p class="text-3xl font-bold text-pink-500">
+                    {{ detailed_reels|watch_in_total }}
+                </p>
+            </div>    
+        </div>
+        {% include 'dashboard/charts/detailed_reels_charts.html' %}
+    </div>
 
     <div id="tiktokDashboard" class="hidden">
         <h2 class="text-2xl font-semibold text-center mb-4">TikTok Analytics</h2>
         <p class="text-center">DATA WILL BE HERE</p>
     </div>
+
+    <div id="ttDetailedData" class="hidden container mx-auto px-4">
+    </div>
 </div>
 
 {% include 'dashboard/scripts/general_charts.html'%}
 {% include 'dashboard/scripts/detailed_shorts_charts.html'%}
+{% include 'dashboard/scripts/detailed_reels_charts.html'%}
 
 <script>
-    document.querySelector('#generalBtn').addEventListener("click", e => {
-        document.querySelector('#ytDashboard').classList.remove('hidden');
-        document.querySelector('#ytDetailedData').classList.add('hidden');
-        initializeGeneralCharts();
-    });
+    const YT_DASHBOARD = document.querySelector("#ytDashboard");
+    const IG_DASHBOARD = document.querySelector("#instaDashboard");
+    const TT_DASHBOARD = document.querySelector("#tiktokDashboard");
 
-    document.querySelector('#detailedBtn').addEventListener("click", e => {
-        document.querySelector('#ytDashboard').classList.add('hidden');
-        document.querySelector('#ytDetailedData').classList.remove('hidden');
-        initializeDetailedCharts();
-    });
+    const YT_DASHBOARD_DETAILED = document.querySelector("#ytDetailedData");
+    const IG_DASHBOARD_DETAILED = document.querySelector("#igDetailedData");
+    const TT_DASHBOARD_DETAILED = document.querySelector("#ttDetailedData");
 
+    const YT_ICON = document.querySelector("#ytIcon img");
+    const IG_ICON = document.querySelector("#instaIcon img");
+    const TT_ICON = document.querySelector("#tiktokIcon img");
+
+    const GENERAL_BTN = document.querySelector("#generalBtn");
+    const DETAILED_BTN = document.querySelector("#detailedBtn");
+
+    const ON_CLASS = "bg-blue-500 text-white px-2 py-1 rounded";
+    const OFF_CLASS = "bg-gray-200 text-gray-700 px-2 py-1 rounded";
+
+    const SELECTED_ON = "border-2 border-green-200 rounded-full"
+    
+    let currentPlatform = "yt";
+    let currentType = "general";
     document.addEventListener("DOMContentLoaded", initializeGeneralCharts);
+
+    const switchTo = (platform, type) => {
+        YT_DASHBOARD.classList.add("hidden");
+        IG_DASHBOARD.classList.add("hidden");
+        TT_DASHBOARD.classList.add("hidden");
+    
+        YT_DASHBOARD_DETAILED.classList.add("hidden");
+        IG_DASHBOARD_DETAILED.classList.add("hidden");
+        TT_DASHBOARD_DETAILED.classList.add("hidden");
+    
+        if (type !== currentType) {
+            if (type === "general") {
+                GENERAL_BTN.setAttribute("class", ON_CLASS);
+                DETAILED_BTN.setAttribute("class", OFF_CLASS);
+            } else {
+                GENERAL_BTN.setAttribute("class", OFF_CLASS);
+                DETAILED_BTN.setAttribute("class", ON_CLASS);
+            }
+        }
+
+        if (platform !== currentPlatform) {
+            YT_ICON.setAttribute("class", "");
+            IG_ICON.setAttribute("class", "");
+            TT_ICON.setAttribute("class", "");
+        }
+
+        currentPlatform = platform;
+        currentType = type;
+
+        if (platform === "yt") {
+            YT_ICON.setAttribute("class", SELECTED_ON);
+            if (type === "general") {
+                YT_DASHBOARD.classList.remove("hidden");
+                initializeGeneralCharts();
+            } else {
+                YT_DASHBOARD_DETAILED.classList.remove("hidden");
+                initializeDetailedCharts();
+            }
+        } else if (platform === "ig") {
+            IG_ICON.setAttribute("class", SELECTED_ON);
+            if (type === "general") {
+                IG_DASHBOARD.classList.remove("hidden");
+            } else {
+                IG_DASHBOARD_DETAILED.classList.remove("hidden");
+                initializeDetailedReelsCharts();
+            }
+        } else if (platform === "tt") {
+            TT_ICON.setAttribute("class", SELECTED_ON);
+            if (type === "general") {
+                TT_DASHBOARD.classList.remove("hidden");
+                initializeGeneralCharts();
+            } else {
+                TT_DASHBOARD_DETAILED.classList.remove("hidden");
+                initializeDetailedCharts();
+            }
+        }
+    };
+
+    YT_ICON.addEventListener("click", () => switchTo("yt", currentType));
+    IG_ICON.addEventListener("click", () => switchTo("ig", currentType));
+    TT_ICON.addEventListener("click", () => switchTo("tt", currentType));
+    GENERAL_BTN.addEventListener("click", () => switchTo(currentPlatform, "general"));
+    DETAILED_BTN.addEventListener("click", () => switchTo(currentPlatform, "detailed"));
 </script>
 {% endblock %}
