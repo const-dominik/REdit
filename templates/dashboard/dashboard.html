@@ -197,12 +197,14 @@
     </div>
 
     <div id="tiktokDashboard" class="hidden">
-        <h2 class="text-2xl font-semibold text-center mb-4">TikTok Analytics</h2>
-        <p class="text-center">DATA WILL BE HERE</p>
+        <div class="w-[75vw] h-[75vh] bg-white rounded-2xl shadow-lg overflow-hidden">
+            <iframe 
+                src="https://countik.com/tiktok-analytics/user/@reditmemer" 
+                class="w-full h-full border-none"
+            ></iframe>
+        </div>
     </div>
-
-    <div id="ttDetailedData" class="hidden container mx-auto px-4">
-    </div>
+    
 </div>
 
 {% include 'dashboard/scripts/general_charts.html'%}
@@ -216,7 +218,6 @@
 
     const YT_DASHBOARD_DETAILED = document.querySelector("#ytDetailedData");
     const IG_DASHBOARD_DETAILED = document.querySelector("#igDetailedData");
-    const TT_DASHBOARD_DETAILED = document.querySelector("#ttDetailedData");
 
     const YT_ICON = document.querySelector("#ytIcon img");
     const IG_ICON = document.querySelector("#instaIcon img");
@@ -241,7 +242,8 @@
     
         YT_DASHBOARD_DETAILED.classList.add("hidden");
         IG_DASHBOARD_DETAILED.classList.add("hidden");
-        TT_DASHBOARD_DETAILED.classList.add("hidden");
+
+        DETAILED_BTN.classList.remove("hidden");
     
         if (type !== currentType) {
             if (type === "general") {
@@ -281,19 +283,14 @@
             }
         } else if (platform === "tt") {
             TT_ICON.setAttribute("class", SELECTED_ON);
-            if (type === "general") {
-                TT_DASHBOARD.classList.remove("hidden");
-                initializeGeneralCharts();
-            } else {
-                TT_DASHBOARD_DETAILED.classList.remove("hidden");
-                initializeDetailedCharts();
-            }
+            DETAILED_BTN.classList.add("hidden");
+            TT_DASHBOARD.classList.remove("hidden");
         }
     };
 
     YT_ICON.addEventListener("click", () => switchTo("yt", currentType));
     IG_ICON.addEventListener("click", () => switchTo("ig", currentType));
-    TT_ICON.addEventListener("click", () => switchTo("tt", currentType));
+    TT_ICON.addEventListener("click", () => switchTo("tt", "general"));
     GENERAL_BTN.addEventListener("click", () => switchTo(currentPlatform, "general"));
     DETAILED_BTN.addEventListener("click", () => switchTo(currentPlatform, "detailed"));
 </script>
