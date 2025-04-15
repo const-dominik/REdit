@@ -1,16 +1,10 @@
-# instrukcja dla Michała
+# Running
 
-Cześć. Mówi Dominik z przeszłości.
+Prerequisites:
+- Python (3.10 or newer).
+- [Poetry](https://python-poetry.org/docs/#installing-with-pipx)
 
-Potrzebujesz tak:
-- mieć zainstalowanego pythona, 3.10 albo większy.
-- mieć zainstalowane [Poetry](https://python-poetry.org/docs/#installing-with-pipx)
-
-Uruchamianie:
-- `git clone repo.git`
-- `poetry install` - to ci instaluje dependency potrzebne
-- `poe migrate` - stworzenie bazy danych
-- `poe start` - startuje serwer, nie wylaczasz tego terminala
-- `poe start-tailwind` - w osobnym terminalu
-
-i powinno hulać :) 
+After cloning the repository:
+- `poetry install`
+- `poe migrate`
+- `poe start`
