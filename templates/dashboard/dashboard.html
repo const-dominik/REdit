@@ -1,11 +1,10 @@
 {% extends "r_edit/base.html" %}
-{% load analytics_filters static %}
+{% load static %}
 {% block title %} REdit | Dashboard {% endblock %}
 
 {% block head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 <style>
-    /* Basic styling for the dashboard icons */
     .icon {
         cursor: pointer;
         padding: 10px;
@@ -41,54 +40,54 @@
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Total Views</h2>
                 <p class="text-3xl font-bold text-green-500">
-                    {{ yt_shorts|sum_by_field:'views' }}
+                    {{ yt.basic_stats.total_views }}
                 </p>
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Total Likes</h2>
                 <p class="text-3xl font-bold text-blue-500">
-                    {{ yt_shorts|sum_by_field:'likes' }}
+                    {{ yt.basic_stats.total_likes }}
                 </p>
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Total Comments</h2>
                 <p class="text-3xl font-bold text-orange-500">
-                    {{ yt_shorts|sum_by_field:'comments' }}
+                    {{ yt.basic_stats.total_comments }}
                 </p>
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Subscribers</h2>
                 <p class="text-3xl font-bold text-purple-600">
-                    {{ yt_shorts|net_subscribers:'subscribersGained,subscribersLost' }}
+                    {{ yt.basic_stats.net_subscribers }}
                 </p>
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Total minutes watched</h2>
                 <p class="text-3xl font-bold text-teal-500">
-                    {{ yt_shorts|sum_by_field:'estimatedMinutesWatched' }}
+                    {{ yt.basic_stats.total_minutes_watched }}
                 </p>
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Total Dislikes</h2>
                 <p class="text-3xl font-bold text-red-600">
-                    {{ yt_shorts|sum_by_field:'dislikes' }}
+                    {{ yt.basic_stats.total_dislikes }}
                 </p>
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Avg. view duration (s)</h2>
                 <p class="text-3xl font-bold text-indigo-500">
-                    {{ yt_shorts|average:'averageViewDuration' }}
+                    {{ yt.basic_stats.avg_view_duration }}
                 </p>
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Avg. watch %</h2>
                 <p class="text-3xl font-bold text-pink-500">
-                    {{ yt_shorts|average:'averageViewPercentage' }}
+                    {{ yt.basic_stats.avg_watch_percentage }}
                 </p>
             </div>
         </div>
 
-        <div class="flex flex-wrap justify-center ">
+        <div class="flex flex-wrap justify-center">
             <div class="bg-white shadow-lg rounded-lg p-4 mb-6 flex-grow mx-1" style="flex: 1 1 calc(33.333% - 0.5rem);">
                 <h2 class="text-xl font-semibold text-center mb-2">Daily Views & Likes</h2>
                 <canvas id="viewsLikesChart" class="w-full h-32"></canvas>
@@ -125,32 +124,31 @@
         {% include 'dashboard/charts/detailed_shorts_charts.html' %}
     </div>
         
-
     <div id="instaDashboard" class="hidden">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-3">
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Total Views</h2>
                 <p class="text-3xl font-bold text-green-500">
-                    {{ reels.views }}
+                    {{ ig.basic_stats.total_views }}
                 </p>
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Total Likes</h2>
                 <p class="text-3xl font-bold text-blue-500">
-                    {{ reels.likes }}
+                    {{ ig.basic_stats.total_likes }}
                 </p>
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Total Comments</h2>
                 <p class="text-3xl font-bold text-orange-500">
-                    {{ reels.comments }}
+                    {{ ig.basic_stats.total_comments }}
                 </p>
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Followers</h2>
                 <p class="text-3xl font-bold text-purple-600">
-                    {% if reels.follower_count %}
-                        {{ reels.follower_count }}
+                    {% if ig.basic_stats.follower_count %}
+                        {{ ig.basic_stats.follower_count }}
                     {% else %}
                         < 100 :(
                     {% endif %}
@@ -159,23 +157,22 @@
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Accounts reached</h2>
                 <p class="text-3xl font-bold text-teal-500">
-                    {{ reels.reach }}
+                    {{ ig.basic_stats.accounts_reached }}
                 </p>
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Total Shares</h2>
                 <p class="text-3xl font-bold text-red-600">
-                    {{ reels.shares }}
+                    {{ ig.basic_stats.total_shares }}
                 </p>
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Total Engagements</h2>
                 <p class="text-3xl font-bold text-indigo-500">
-                    {{ reels.accounts_engaged }}
+                    {{ ig.basic_stats.total_engagements }}
                 </p>
             </div>
         </div>
-        <img src="{% static 'images/dog.jpg' %}" alt="samoyeds" class="w-1/2 h-auto mx-auto"/>
     </div>
 
     <div id="igDetailedData" class="hidden container mx-auto px-4">
@@ -183,13 +180,13 @@
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Avg. watch %</h2>
                 <p class="text-3xl font-bold text-pink-500">
-                    {{ detailed_reels|average_watch_time }}
+                    {{ ig.basic_stats.avg_watch_percentage  }}
                 </p>
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h2 class="text-xl font-semibold">Total minutes watched</h2>
                 <p class="text-3xl font-bold text-pink-500">
-                    {{ detailed_reels|watch_in_total }}
+                    {{ ig.basic_stats.total_minutes_watched }}
                 </p>
             </div>    
         </div>

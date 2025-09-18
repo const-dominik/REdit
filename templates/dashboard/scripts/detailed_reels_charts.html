@@ -1,38 +1,4 @@
-{% load static analytics_filters %}
-
-{% get_instagram_avg_views_per_content_group detailed_reels as instagram_avg_views_content_group %}
-{% get_instagram_avg_views_per_video_type detailed_reels as instagram_avg_views_video_type %}
-{% get_instagram_avg_views_per_song_type detailed_reels as instagram_avg_views_song_type %}
-{% get_instagram_avg_views_per_song_title detailed_reels as instagram_avg_views_song_title %}
-{% get_instagram_avg_views_per_background detailed_reels as instagram_avg_views_background %}
-{% get_instagram_avg_views_per_media_per_screen detailed_reels as instagram_avg_views_media_per_screen %}
-{% get_instagram_avg_views_per_media_qty detailed_reels as instagram_avg_views_media_qty %}
-{% get_instagram_avg_views_per_start_text detailed_reels as instagram_avg_views_start_text %}
-{% get_instagram_avg_views_per_end_text detailed_reels as instagram_avg_views_end_text %}
-
-{% get_instagram_engagement_per_content_group detailed_reels as instagram_engagement_content_group %}
-{% get_instagram_engagement_per_video_type detailed_reels as instagram_engagement_video_type %}
-{% get_instagram_engagement_per_song_type detailed_reels as instagram_engagement_song_type %}
-{% get_instagram_engagement_per_song_title detailed_reels as instagram_engagement_song_title %}
-{% get_instagram_engagement_per_background detailed_reels as instagram_engagement_background %}
-{% get_instagram_engagement_per_media_per_screen detailed_reels as instagram_engagement_media_per_screen %}
-{% get_instagram_engagement_per_media_qty detailed_reels as instagram_engagement_media_qty %}
-{% get_instagram_engagement_per_start_text detailed_reels as instagram_engagement_start_text %}
-{% get_instagram_engagement_per_end_text detailed_reels as instagram_engagement_end_text %}
-
-{% get_instagram_avg_watch_percentage_per_content_group detailed_reels as instagram_avg_watch_percentage_content_group %}
-{% get_instagram_avg_watch_percentage_per_video_type detailed_reels as instagram_avg_watch_percentage_video_type %}
-{% get_instagram_avg_watch_percentage_per_song_type detailed_reels as instagram_avg_watch_percentage_song_type %}
-{% get_instagram_avg_watch_percentage_per_song_title detailed_reels as instagram_avg_watch_percentage_song_title %}
-{% get_instagram_avg_watch_percentage_per_background detailed_reels as instagram_avg_watch_percentage_background %}
-{% get_instagram_avg_watch_percentage_per_media_per_screen detailed_reels as instagram_avg_watch_percentage_media_per_screen %}
-{% get_instagram_avg_watch_percentage_per_media_qty detailed_reels as instagram_avg_watch_percentage_media_qty %}
-{% get_instagram_avg_watch_percentage_per_start_text detailed_reels as instagram_avg_watch_percentage_start_text %}
-{% get_instagram_avg_watch_percentage_per_end_text detailed_reels as instagram_avg_watch_percentage_end_text %}
-
-{% get_instagram_video_length_vs_watch_time detailed_reels as instagram_video_length_vs_watch_time %}
-{% get_instagram_avg_views_per_daily_posts detailed_reels as instagram_avg_views_per_daily_posts %}
-{% get_instagram_views_per_day_of_week detailed_reels as instagram_views_per_day_of_week %}
+{% load static %}
 
 <script>
     const initializeDetailedReelsCharts = () => {
@@ -136,86 +102,86 @@
         
     
         const instagramAvgViewsPerContentGroupCtx = document.getElementById('instagramAvgViewsPerContentGroupChart').getContext('2d');
-        initializePieChart(instagramAvgViewsPerContentGroupCtx, {{ instagram_avg_views_content_group.labels|safe }}, {{ instagram_avg_views_content_group.values|safe }}, 'avg views');
+        initializePieChart(instagramAvgViewsPerContentGroupCtx, {{ ig.detailed_analytics.views_by_content_group.labels|safe }}, {{ ig.detailed_analytics.views_by_content_group.values|safe }}, 'avg views');
     
         const instagramAvgViewsPerVideoTypeCtx = document.getElementById('instagramAvgViewsPerVideoTypeChart').getContext('2d');
-        initializePieChart(instagramAvgViewsPerVideoTypeCtx, {{ instagram_avg_views_video_type.labels|safe }}, {{ instagram_avg_views_video_type.values|safe }}, 'avg views');
+        initializePieChart(instagramAvgViewsPerVideoTypeCtx, {{ ig.detailed_analytics.views_by_video_type.labels|safe }}, {{ ig.detailed_analytics.views_by_video_type.values|safe }}, 'avg views');
     
         const instagramAvgViewsPerSongTypeCtx = document.getElementById('instagramAvgViewsPerSongTypeChart').getContext('2d');
-        initializePieChart(instagramAvgViewsPerSongTypeCtx, {{ instagram_avg_views_song_type.labels|safe }}, {{ instagram_avg_views_song_type.values|safe }}, 'avg views');
+        initializePieChart(instagramAvgViewsPerSongTypeCtx, {{ ig.detailed_analytics.views_by_song_type.labels|safe }}, {{ ig.detailed_analytics.views_by_song_type.values|safe }}, 'avg views');
     
         const instagramAvgViewsPerSongTitleCtx = document.getElementById('instagramAvgViewsPerSongTitleChart').getContext('2d');
-        initializePieChart(instagramAvgViewsPerSongTitleCtx, {{ instagram_avg_views_song_title.labels|safe }}, {{ instagram_avg_views_song_title.values|safe }}, 'avg views');
+        initializePieChart(instagramAvgViewsPerSongTitleCtx, {{ ig.detailed_analytics.views_by_song_title.labels|safe }}, {{ ig.detailed_analytics.views_by_song_title.values|safe }}, 'avg views');
     
         const instagramAvgViewsPerBackgroundCtx = document.getElementById('instagramAvgViewsPerBackgroundChart').getContext('2d');
-        initializePieChart(instagramAvgViewsPerBackgroundCtx, {{ instagram_avg_views_background.labels|safe }}, {{ instagram_avg_views_background.values|safe }}, 'avg views');
+        initializePieChart(instagramAvgViewsPerBackgroundCtx, {{ ig.detailed_analytics.views_by_background.labels|safe }}, {{ ig.detailed_analytics.views_by_background.values|safe }}, 'avg views');
     
         const instagramAvgViewsPerMediaPerScreenCtx = document.getElementById('instagramAvgViewsPerMediaPerScreenChart').getContext('2d');
-        initializePieChart(instagramAvgViewsPerMediaPerScreenCtx, {{ instagram_avg_views_media_per_screen.labels|safe }}, {{ instagram_avg_views_media_per_screen.values|safe }}, 'avg views');
+        initializePieChart(instagramAvgViewsPerMediaPerScreenCtx, {{ ig.detailed_analytics.views_by_media_per_screen.labels|safe }}, {{ ig.detailed_analytics.views_by_media_per_screen.values|safe }}, 'avg views');
     
         const instagramAvgViewsPerMediaQtyCtx = document.getElementById('instagramAvgViewsPerMediaQtyChart').getContext('2d');
-        initializePieChart(instagramAvgViewsPerMediaQtyCtx, {{ instagram_avg_views_media_qty.labels|safe }}, {{ instagram_avg_views_media_qty.values|safe }}, 'avg views');
+        initializePieChart(instagramAvgViewsPerMediaQtyCtx, {{ ig.detailed_analytics.views_by_media_qty.labels|safe }}, {{ ig.detailed_analytics.views_by_media_qty.values|safe }}, 'avg views');
     
         const instagramAvgViewsPerStartTextCtx = document.getElementById('instagramAvgViewsPerStartTextChart').getContext('2d');
-        initializePieChart(instagramAvgViewsPerStartTextCtx, {{ instagram_avg_views_start_text.labels|safe }}, {{ instagram_avg_views_start_text.values|safe }}, 'avg views');
+        initializePieChart(instagramAvgViewsPerStartTextCtx, {{ ig.detailed_analytics.views_by_start_text.labels|safe }}, {{ ig.detailed_analytics.views_by_start_text.values|safe }}, 'avg views');
     
         const instagramAvgViewsPerEndTextCtx = document.getElementById('instagramAvgViewsPerEndTextChart').getContext('2d');
-        initializePieChart(instagramAvgViewsPerEndTextCtx, {{ instagram_avg_views_end_text.labels|safe }}, {{ instagram_avg_views_end_text.values|safe }}, 'avg views');
+        initializePieChart(instagramAvgViewsPerEndTextCtx, {{ ig.detailed_analytics.views_by_end_text.labels|safe }}, {{ ig.detailed_analytics.views_by_end_text.values|safe }}, 'avg views');
     
         const instagramEngagementRateByContentGroupCtx = document.getElementById('instagramEngagementRateByContentGroupChart').getContext('2d');
-        initializeStackedBarChart(instagramEngagementRateByContentGroupCtx, {{ instagram_engagement_content_group.labels|safe }}, {{ instagram_engagement_content_group.datasets|safe }});
+        initializeStackedBarChart(instagramEngagementRateByContentGroupCtx, {{ ig.detailed_analytics.engagement_by_content_group.labels|safe }}, {{ ig.detailed_analytics.engagement_by_content_group.datasets|safe }});
     
         const instagramEngagementPerVideoTypeCtx = document.getElementById('instagramEngagementPerVideoTypeChart').getContext('2d');
-        initializeStackedBarChart(instagramEngagementPerVideoTypeCtx, {{ instagram_engagement_video_type.labels|safe }}, {{ instagram_engagement_video_type.datasets|safe }});
+        initializeStackedBarChart(instagramEngagementPerVideoTypeCtx, {{ ig.detailed_analytics.engagement_by_video_type.labels|safe }}, {{ ig.detailed_analytics.engagement_by_video_type.datasets|safe }});
     
         const instagramEngagementPerSongTypeCtx = document.getElementById('instagramEngagementPerSongTypeChart').getContext('2d');
-        initializeStackedBarChart(instagramEngagementPerSongTypeCtx, {{ instagram_engagement_song_type.labels|safe }}, {{ instagram_engagement_song_type.datasets|safe }});
+        initializeStackedBarChart(instagramEngagementPerSongTypeCtx, {{ ig.detailed_analytics.engagement_by_song_type.labels|safe }}, {{ ig.detailed_analytics.engagement_by_song_type.datasets|safe }});
     
         const instagramEngagementPerSongTitleCtx = document.getElementById('instagramEngagementPerSongTitleChart').getContext('2d');
-        initializeStackedBarChart(instagramEngagementPerSongTitleCtx, {{ instagram_engagement_song_title.labels|safe }}, {{ instagram_engagement_song_title.datasets|safe }});
+        initializeStackedBarChart(instagramEngagementPerSongTitleCtx, {{ ig.detailed_analytics.engagement_by_song_title.labels|safe }}, {{ ig.detailed_analytics.engagement_by_song_title.datasets|safe }});
     
         const instagramEngagementPerBackgroundCtx = document.getElementById('instagramEngagementPerBackgroundChart').getContext('2d');
-        initializeStackedBarChart(instagramEngagementPerBackgroundCtx, {{ instagram_engagement_background.labels|safe }}, {{ instagram_engagement_background.datasets|safe }});
+        initializeStackedBarChart(instagramEngagementPerBackgroundCtx, {{ ig.detailed_analytics.engagement_by_background.labels|safe }}, {{ ig.detailed_analytics.engagement_by_background.datasets|safe }});
     
         const instagramEngagementPerMediaPerScreenCtx = document.getElementById('instagramEngagementPerMediaPerScreenChart').getContext('2d');
-        initializeStackedBarChart(instagramEngagementPerMediaPerScreenCtx, {{ instagram_engagement_media_per_screen.labels|safe }}, {{ instagram_engagement_media_per_screen.datasets|safe }});
+        initializeStackedBarChart(instagramEngagementPerMediaPerScreenCtx, {{ ig.detailed_analytics.engagement_by_media_per_screen.labels|safe }}, {{ ig.detailed_analytics.engagement_by_media_per_screen.datasets|safe }});
     
         const instagramEngagementPerMediaQtyCtx = document.getElementById('instagramEngagementPerMediaQtyChart').getContext('2d');
-        initializeStackedBarChart(instagramEngagementPerMediaQtyCtx, {{ instagram_engagement_media_qty.labels|safe }}, {{ instagram_engagement_media_qty.datasets|safe }});
+        initializeStackedBarChart(instagramEngagementPerMediaQtyCtx, {{ ig.detailed_analytics.engagement_by_media_qty.labels|safe }}, {{ ig.detailed_analytics.engagement_by_media_qty.datasets|safe }});
     
         const instagramEngagementPerStartTextCtx = document.getElementById('instagramEngagementPerStartTextChart').getContext('2d');
-        initializeStackedBarChart(instagramEngagementPerStartTextCtx, {{ instagram_engagement_start_text.labels|safe }}, {{ instagram_engagement_start_text.datasets|safe }});
+        initializeStackedBarChart(instagramEngagementPerStartTextCtx, {{ ig.detailed_analytics.engagement_by_start_text.labels|safe }}, {{ ig.detailed_analytics.engagement_by_start_text.datasets|safe }});
     
         const instagramEngagementPerEndTextCtx = document.getElementById('instagramEngagementPerEndTextChart').getContext('2d');
-        initializeStackedBarChart(instagramEngagementPerEndTextCtx, {{ instagram_engagement_end_text.labels|safe }}, {{ instagram_engagement_end_text.datasets|safe }});
+        initializeStackedBarChart(instagramEngagementPerEndTextCtx, {{ ig.detailed_analytics.engagement_by_end_text.labels|safe }}, {{ ig.detailed_analytics.engagement_by_end_text.datasets|safe }});
     
         // Initialize Instagram Watch Percentage Charts
         const instagramAvgWatchPercentageContentGroupCtx = document.getElementById('instagramAvgWatchPercentagePerContentGroupChart').getContext('2d');
-        initializePieChart(instagramAvgWatchPercentageContentGroupCtx, {{ instagram_avg_watch_percentage_content_group.labels|safe }}, {{ instagram_avg_watch_percentage_content_group.values|safe }}, 'avg watch %');
+        initializePieChart(instagramAvgWatchPercentageContentGroupCtx, {{ ig.detailed_analytics.watch_percentage_by_content_group.labels|safe }}, {{ ig.detailed_analytics.watch_percentage_by_content_group.values|safe }}, 'avg watch %');
     
         const instagramAvgWatchPercentageVideoTypeCtx = document.getElementById('instagramAvgWatchPercentagePerVideoTypeChart').getContext('2d');
-        initializePieChart(instagramAvgWatchPercentageVideoTypeCtx, {{ instagram_avg_watch_percentage_video_type.labels|safe }}, {{ instagram_avg_watch_percentage_video_type.values|safe }}, 'avg watch %');
+        initializePieChart(instagramAvgWatchPercentageVideoTypeCtx, {{ ig.detailed_analytics.watch_percentage_by_video_type.labels|safe }}, {{ ig.detailed_analytics.watch_percentage_by_video_type.values|safe }}, 'avg watch %');
     
         const instagramAvgWatchPercentageSongTypeCtx = document.getElementById('instagramAvgWatchPercentagePerSongTypeChart').getContext('2d');
-        initializePieChart(instagramAvgWatchPercentageSongTypeCtx, {{ instagram_avg_watch_percentage_song_type.labels|safe }}, {{ instagram_avg_watch_percentage_song_type.values|safe }}, 'avg watch %');
+        initializePieChart(instagramAvgWatchPercentageSongTypeCtx, {{ ig.detailed_analytics.watch_percentage_by_song_type.labels|safe }}, {{ ig.detailed_analytics.watch_percentage_by_song_type.values|safe }}, 'avg watch %');
     
         const instagramAvgWatchPercentageSongTitleCtx = document.getElementById('instagramAvgWatchPercentagePerSongTitleChart').getContext('2d');
-        initializePieChart(instagramAvgWatchPercentageSongTitleCtx, {{ instagram_avg_watch_percentage_song_title.labels|safe }}, {{ instagram_avg_watch_percentage_song_title.values|safe }}, 'avg watch %');
+        initializePieChart(instagramAvgWatchPercentageSongTitleCtx, {{ ig.detailed_analytics.watch_percentage_by_song_title.labels|safe }}, {{ ig.detailed_analytics.watch_percentage_by_song_title.values|safe }}, 'avg watch %');
     
         const instagramAvgWatchPercentageBackgroundCtx = document.getElementById('instagramAvgWatchPercentagePerBackgroundChart').getContext('2d');
-        initializePieChart(instagramAvgWatchPercentageBackgroundCtx, {{ instagram_avg_watch_percentage_background.labels|safe }}, {{ instagram_avg_watch_percentage_background.values|safe }}, 'avg watch %');
+        initializePieChart(instagramAvgWatchPercentageBackgroundCtx, {{ ig.detailed_analytics.watch_percentage_by_background.labels|safe }}, {{ ig.detailed_analytics.watch_percentage_by_background.values|safe }}, 'avg watch %');
     
         const instagramAvgWatchPercentageMediaPerScreenCtx = document.getElementById('instagramAvgWatchPercentagePerMediaPerScreenChart').getContext('2d');
-        initializePieChart(instagramAvgWatchPercentageMediaPerScreenCtx, {{ instagram_avg_watch_percentage_media_per_screen.labels|safe }}, {{ instagram_avg_watch_percentage_media_per_screen.values|safe }}, 'avg watch %');
+        initializePieChart(instagramAvgWatchPercentageMediaPerScreenCtx, {{ ig.detailed_analytics.watch_percentage_by_media_per_screen.labels|safe }}, {{ ig.detailed_analytics.watch_percentage_by_media_per_screen.values|safe }}, 'avg watch %');
     
         const instagramAvgWatchPercentageMediaQtyCtx = document.getElementById('instagramAvgWatchPercentagePerMediaQtyChart').getContext('2d');
-        initializePieChart(instagramAvgWatchPercentageMediaQtyCtx, {{ instagram_avg_watch_percentage_media_qty.labels|safe }}, {{ instagram_avg_watch_percentage_media_qty.values|safe }}, 'avg watch %');
+        initializePieChart(instagramAvgWatchPercentageMediaQtyCtx, {{ ig.detailed_analytics.watch_percentage_by_media_qty.labels|safe }}, {{ ig.detailed_analytics.watch_percentage_by_media_qty.values|safe }}, 'avg watch %');
     
         const instagramAvgWatchPercentageStartTextCtx = document.getElementById('instagramAvgWatchPercentagePerStartTextChart').getContext('2d');
-        initializePieChart(instagramAvgWatchPercentageStartTextCtx, {{ instagram_avg_watch_percentage_start_text.labels|safe }}, {{ instagram_avg_watch_percentage_start_text.values|safe }}, 'avg watch %');
+        initializePieChart(instagramAvgWatchPercentageStartTextCtx, {{ ig.detailed_analytics.watch_percentage_by_start_text.labels|safe }}, {{ ig.detailed_analytics.watch_percentage_by_start_text.values|safe }}, 'avg watch %');
     
         const instagramAvgWatchPercentageEndTextCtx = document.getElementById('instagramAvgWatchPercentagePerEndTextChart').getContext('2d');
-        initializePieChart(instagramAvgWatchPercentageEndTextCtx, {{ instagram_avg_watch_percentage_end_text.labels|safe }}, {{ instagram_avg_watch_percentage_end_text.values|safe }}, 'avg watch %');
+        initializePieChart(instagramAvgWatchPercentageEndTextCtx, {{ ig.detailed_analytics.watch_percentage_by_end_text.labels|safe }}, {{ ig.detailed_analytics.watch_percentage_by_end_text.values|safe }}, 'avg watch %');
         
         
         // Instagram Section 4 Charts
@@ -226,7 +192,7 @@
         data: {
             datasets: [{
                 label: 'Video Length vs Watch Time',
-                data: {{ instagram_video_length_vs_watch_time|safe }},
+                data: {{ ig.detailed_analytics.video_length_vs_watch_time|safe }},
                 backgroundColor: 'rgba(255, 99, 132, 0.5)'
             }]
         },
@@ -245,8 +211,8 @@
     const instagramDailyPostsPieCtx = document.getElementById('instagramAvgViewsPerDailyPostsPieChart').getContext('2d');
     initializePieChart(
         instagramDailyPostsPieCtx,
-        {{ instagram_avg_views_per_daily_posts.labels|safe }},
-        {{ instagram_avg_views_per_daily_posts.values|safe }},
+        {{ ig.detailed_analytics.views_per_posting_frequency.labels|safe }},
+        {{ ig.detailed_analytics.views_per_posting_frequency.values|safe }},
         'Views'
     );
     
@@ -254,8 +220,8 @@
     const instagramViewsDoWBarCtx = document.getElementById('instagramViewsPerDayOfWeekBarChart').getContext('2d');
     initializePieChart(
         instagramViewsDoWBarCtx,
-        {{ instagram_views_per_day_of_week.labels|safe }},
-        {{ instagram_views_per_day_of_week.values|safe }},
+        {{ ig.detailed_analytics.views_per_day_of_week.labels|safe }},
+        {{ ig.detailed_analytics.views_per_day_of_week.values|safe }},
         'Average Views'
     );
     }

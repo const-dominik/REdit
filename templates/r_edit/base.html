@@ -27,19 +27,14 @@
                     Subreddits</a>
             </li>
             <li class="mb-4">
-                <a href="{% url 'contentgroups' %}" 
-                class="hover:bg-blue-400 p-2 rounded block {% if page_name == "groups" %} bg-blue-300 {% else %} bg-blue-200 {% endif %} font-medium">
-                    Content Groups</a>
-            </li>
-            <li class="mb-4">
                 <a href="{% url 'posts-fetch' %}" 
                 class="hover:bg-blue-400 p-2 rounded block {% if page_name == "posts-fetch" %} bg-blue-300 {% else %} bg-blue-200 {% endif %} font-medium">
                     Posts fetching</a>
             </li>
             <li class="mb-4">
-                <a href="{% url 'my-posts' %}" 
-                class="hover:bg-blue-400 p-2 rounded block {% if page_name == "posts" %} bg-blue-300 {% else %} bg-blue-200 {% endif %} font-medium">
-                    Posts</a>
+                <a href="{% url 'contentgroups' %}" 
+                class="hover:bg-blue-400 p-2 rounded block {% if page_name == "groups" %} bg-blue-300 {% else %} bg-blue-200 {% endif %} font-medium">
+                    Content Groups</a>
             </li>
             <li class="mb-4">
                 <a href="{% url 'video-form' %}" 

@@ -1,13 +1,13 @@
-{% load analytics_filters static %}
+{% load static %}
 
 <script>
     const initializeGeneralCharts = () => {
         const combinedViewsLikesData = {
-            labels: {{ yt_shorts|pluck_field:'day'|safe }},
+            labels: {{ yt.chart_data.days|safe }},
             datasets: [
                 {
                     label: 'Daily Views',
-                    data: {{ yt_shorts|pluck_field:'views'|safe }},
+                    data: {{ yt.chart_data.views|safe }},
                     borderColor: '#4CAF50',
                     backgroundColor: 'rgba(76, 175, 80, 0.2)',
                     fill: true,
@@ -15,7 +15,7 @@
                 },
                 {
                     label: 'Daily Likes',
-                    data: {{ yt_shorts|pluck_field:'likes'|safe }},
+                    data: {{ yt.chart_data.likes|safe }},
                     borderColor: '#2196F3',
                     backgroundColor: 'rgba(33, 150, 243, 0.2)',
                     fill: false,
@@ -39,11 +39,11 @@
 
         // Combined Average Duration and Watch Percentage
         const combinedAvgDurationWatchPercentageData = {
-            labels: {{ yt_shorts|pluck_field:'day'|safe }},
+            labels: {{ yt.chart_data.days|safe }},
             datasets: [
                 {
                     label: 'Average View Duration (s)',
-                    data: {{ yt_shorts|pluck_field:'averageViewDuration'|safe }},
+                    data: {{ yt.chart_data.avg_view_durations|safe }},
                     borderColor: '#FFEB3B',
                     backgroundColor: 'rgba(255, 235, 59, 0.2)',
                     fill: true,
@@ -51,7 +51,7 @@
                 },
                 {
                     label: 'Watch Percentage (%)',
-                    data: {{ yt_shorts|pluck_field:'averageViewPercentage'|safe }},
+                    data: {{ yt.chart_data.avg_watch_percentages|safe }},
                     borderColor: '#FF5722',
                     backgroundColor: 'rgba(255, 87, 34, 0.2)',
                     fill: false,
@@ -74,17 +74,19 @@
         });
 
         const engagementOverTimeData = {
-            labels: {{ yt_shorts|pluck_field:'day'|safe }},
-            datasets: [{
+            labels: {{ yt.chart_data.days|safe }},
+            datasets: [
+            {
                 label: 'Total Engagement',
-                data: {{ yt_shorts|total_engagement:"likes,comments,shares" }},
+                data: {{ yt.engagement_data|safe }},
                 borderColor: '#FF5722',
                 backgroundColor: 'rgba(255, 87, 34, 0.2)',
                 fill: true,
                 tension: 0.1
-            }, {
+            },
+            {
                 label: 'Likes',
-                data: {{ yt_shorts|pluck_field:'likes'|safe }},
+                data: {{ yt.chart_data.likes|safe }},
                 borderColor: '#2196F3',
                 backgroundColor: 'rgba(33, 150, 243, 0.2)',
                 fill: false,
@@ -92,7 +94,7 @@
                 tension: 0.1
             }, {
                 label: 'Comments',
-                data: {{ yt_shorts|pluck_field:'comments'|safe }},
+                data: {{ yt.chart_data.comments|safe }},
                 borderColor: '#FFEB3B',
                 backgroundColor: 'rgba(255, 235, 59, 0.2)',
                 fill: false,
@@ -100,7 +102,7 @@
                 tension: 0.1
             }, {
                 label: 'Shares',
-                data: {{ yt_shorts|pluck_field:'shares'|default:0 }},
+                data: {{ yt.chart_data.shares|safe }},
                 borderColor: '#4CAF50',
                 backgroundColor: 'rgba(76, 175, 80, 0.2)',
                 fill: false,
@@ -123,14 +125,12 @@
             }
         });
 
-
-
         const subscribersData = {
-            labels: {{ yt_shorts|pluck_field:'day'|safe }},
+            labels: {{ yt.chart_data.days|safe }},
             datasets: [
                 {
                     label: 'Subscribers Gained',
-                    data: {{ yt_shorts|pluck_field:'subscribersGained'|safe }},
+                    data: {{ yt.chart_data.subscribers_gained|safe }},
                     borderColor: '#3F51B5',
                     backgroundColor: 'rgba(63, 81, 181, 0.2)',
                     fill: true,
@@ -138,7 +138,7 @@
                 },
                 {
                     label: 'Subscribers Lost',
-                    data: {{ yt_shorts|pluck_field:'subscribersLost'|safe }},
+                    data: {{ yt.chart_data.subscribers_lost|safe }},
                     borderColor: '#F44336',
                     backgroundColor: 'rgba(244, 67, 54, 0.2)',
                     fill: true,
@@ -161,11 +161,11 @@
         });
 
         const viewsVsMinutesData = {
-            labels: {{ yt_shorts|pluck_field:'day'|safe }},
+            labels: {{ yt.chart_data.days|safe }},
             datasets: [
                 {
                     label: 'Views',
-                    data: {{ yt_shorts|pluck_field:'views'|safe }},
+                    data: {{ yt.chart_data.views|safe }},
                     borderColor: '#009688',
                     backgroundColor: 'rgba(0, 150, 136, 0.2)',
                     fill: true,
@@ -173,7 +173,7 @@
                 },
                 {
                     label: 'Minutes Watched',
-                    data: {{ yt_shorts|pluck_field:'estimatedMinutesWatched'|safe }},
+                    data: {{ yt.chart_data.minutes_watched|safe }},
                     borderColor: '#FF9800',
                     backgroundColor: 'rgba(255, 152, 0, 0.2)',
                     fill: true,
@@ -196,11 +196,11 @@
         });
 
         const likesVsDislikesData = {
-            labels: {{ yt_shorts|pluck_field:'day'|safe }},
+            labels: {{ yt.chart_data.days|safe }},
             datasets: [
                 {
                     label: 'Likes',
-                    data: {{ yt_shorts|pluck_field:'likes'|safe }},
+                    data: {{ yt.chart_data.likes|safe }},
                     borderColor: '#4CAF50',
                     backgroundColor: 'rgba(76, 175, 80, 0.2)',
                     fill: true,
@@ -208,7 +208,7 @@
                 },
                 {
                     label: 'Dislikes',
-                    data: {{ yt_shorts|pluck_field:'dislikes'|safe }},
+                    data: {{ yt.chart_data.dislikes|safe }},
                     borderColor: '#F44336',
                     backgroundColor: 'rgba(244, 67, 54, 0.2)',
                     fill: true,

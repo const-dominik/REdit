@@ -1,6 +1,9 @@
 {% extends "r_edit/base.html" %}
 
+{% load analytics_filters %}
+
 {% block title %} REdit | Content Groups {% endblock %}
+
 
 {% block content %}
 <div class="h-screen p-5 flex flex-col">
@@ -9,7 +12,7 @@
     <div class="mt-8">
         <form action="" method="POST" class="flex items-center">
             {% csrf_token %}
-            {{ form.name }}
+            {{ new_group_form.name }}
             <button type="submit" 
                     class="bg-blue-500 text-white rounded-r-md px-4 py-2 hover:bg-blue-600 transition duration-200">
                 +
@@ -65,7 +68,9 @@
                                 </div>
 
                                 <div id="edit-group-{{ group.id }}" class="hidden mt-4 mb-6">
-                                    <form id="edit-form-{{ group.id }}" class="space-y-4">
+                                    <form id="edit-form-{{ group.id }}" class="space-y-4 content-group-form">
+                                        {% with form=group_forms|get_item:group.id %}
+
                                         <input 
                                             type="text" 
                                             name="name" 
@@ -95,7 +100,8 @@
                                             <option value="black" {% if group.background == "black" %}selected{% endif %}>Black</option>
                                             <option value="minecraft" {% if group.background == "minecraft" %}selected{% endif %}>Minecraft</option>
                                             <option value="subway" {% if group.background == "subway" %}selected{% endif %}>Subway</option>
-                                            <option value="not-black" {% if group.background == "not-black" %}selected{% endif %}>Not Black</option>
+                                            <option value="not-black" {% if group.background == "not-black" %}selected{% endif %}>Subway/Minecraft</option>
+                                            <option value="chill" {% if group.background == "chill" %}selected{% endif %}>Chill</option>
                                         </select>
                                         <input 
                                             type="text" 
@@ -127,6 +133,11 @@
                                             class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 outline-none transition-all"
                                             placeholder="Title for uploaded video"
                                         >
+                                        
+                                        {{ form.song_type }}
+                                
+                                        {{ form.song_title }}
+                                        
                                         <button 
                                             type="button" 
                                             onclick="saveGroupChanges('{{ group.id }}')" 
@@ -141,6 +152,7 @@
                                         >
                                             Cancel
                                         </button>
+                                        {% endwith %}
                                     </form>
                                 </div>
 
@@ -256,5 +268,34 @@
             location.reload();
         }
     }
+
+    document.querySelectorAll(".content-group-form").forEach(group => {
+        const songType = group.querySelector("#id_song_type");
+        songType.addEventListener("change", async (ev) => {
+            const songType = ev.target.value
+            const songTitleField = group.querySelector("#id_song_title");
+
+            songTitleField.innerHTML = ""; // xd
+
+            if (songType) {
+                const response = await fetch("{% url 'ajax_song_titles' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify({ song_type: songType }),
+                });
+                const data = await response.json();
+                const songs = data.results;
+                for (const [song_name, song] of songs) {
+                    const option = new Option(song_name, song);
+                    songTitleField.appendChild(option);
+                }
+            }
+        });
+    })
+
 </script>
+
 {% endblock %}

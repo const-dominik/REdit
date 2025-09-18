@@ -1,8 +1,13 @@
-db.sqlite3
-.env
-media
 __pycache__/
 *.pyc
+
+.env
 yt_credentials.json
 token.json
 CookiesDir/*
+
+.vscode
+
+db.sqlite3
+media
+static/video_assets
