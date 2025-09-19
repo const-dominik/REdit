@@ -2,6 +2,7 @@ import os
 import datetime
 import requests
 import time
+import dropbox
 
 from dotenv import load_dotenv
 
@@ -25,6 +26,13 @@ SCOPES = [
 ]
 
 
+def get_dbx_instance():
+    access_token = generate_dropbox_access_token()
+    instance = dropbox.Dropbox(access_token)
+
+    return instance
+
+
 def authenticate(type, version="v3"):
     credentials = None
     if os.path.exists("token.json"):
@@ -40,26 +48,6 @@ def authenticate(type, version="v3"):
         with open("token.json", "w") as token:
             token.write(credentials.to_json())
     return build(type, version, credentials=credentials)
-
-
-def upload_file_to_drive(file_path, file_name):
-    service = authenticate("drive")
-
-    file_metadata = {"name": file_name}
-    media = MediaFileUpload(file_path, resumable=True)
-    file = (
-        service.files()
-        .create(body=file_metadata, media_body=media, fields="id")
-        .execute()
-    )
-    file_id = file.get("id")
-
-    service.permissions().create(
-        fileId=file_id, body={"type": "anyone", "role": "reader"}
-    ).execute()
-
-    shareable_link = f"https://drive.google.com/uc?export=download&id={file_id}"
-    return shareable_link
 
 
 def upload_to_shorts(video):
@@ -88,10 +76,56 @@ def upload_to_shorts(video):
         print(f"An error occurred: {e}")
 
 
+def generate_dropbox_access_token():
+    url = "https://api.dropbox.com/oauth2/token"
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    data = {
+        "grant_type": "refresh_token",
+        "refresh_token": os.getenv("DROPBOX_REFRESH_TOKEN"),
+        "client_id": os.getenv("DROPBOX_APP_KEY"),
+        "client_secret": os.getenv("DROPBOX_APP_SECRET"),
+    }
+
+    response = requests.post(url, headers=headers, data=data)
+
+    if response.status_code == 200:
+        return response.json().get("access_token")
+
+    raise Exception("Something went wrong with token generation.")
+
+
+def upload_to_dropbox(video, filename):
+    dbx = get_dbx_instance()
+
+    try:
+        with open(video.video.path, "rb") as file:
+            dbx.files_upload(
+                file.read(), filename, mode=dropbox.files.WriteMode("overwrite")
+            )
+
+        link = dbx.sharing_create_shared_link_with_settings(filename).url
+        direct_link = link.replace(
+            "www.dropbox.com", "dl.dropboxusercontent.com"
+        ).replace("?dl=0", "")
+        print(direct_link)
+        return direct_link
+
+    except Exception as e:
+        print("Filed to upload file to dropbox", e)
+
+
+def remove_from_dropbox(filename):
+    dbx = get_dbx_instance()
+    dbx.files_delete_v2(filename)
+
+
 def upload_to_reels(video):
-    drive_link = upload_file_to_drive(
-        video.video.path, f"file_{int(datetime.datetime.now().timestamp())}.mp4"
-    )
+    filename = f"/reels/file_{int(datetime.datetime.now().timestamp())}.mp4"
+    dropbox_link = upload_to_dropbox(video, filename)
+
+    if not dropbox_link:
+        print("Dropbox upload failed, terminating reel upload.")
+        return
 
     # upload video
     upload_url = (
@@ -104,7 +138,7 @@ def upload_to_reels(video):
         headers={"Content-Type": "application/json"},
         data={
             "media_type": "REELS",
-            "video_url": drive_link,
+            "video_url": dropbox_link,
             "access_token": os.getenv("INSTA_ACCESS_TOKEN"),
         },
     )
@@ -136,12 +170,15 @@ def upload_to_reels(video):
             print("Media not ready yet, retrying in 10s.")
             time.sleep(10)
             return publish(id)
+        elif "error" in data:
+            print("Something went wrong:", data)
 
     reel_id = publish(id)
 
     UploadedVideo.objects.create(
         video=video, platform="Instagram", uploaded_video_id=reel_id
     )
+    remove_from_dropbox(filename)
     print("Uploaded to reels!")
 
 
@@ -171,6 +208,6 @@ def upload_to_tiktok(video):
 
 
 def upload_to_social_media(video):
-    upload_to_shorts(video)
+    # upload_to_shorts(video)
     upload_to_reels(video)
     # upload_to_tiktok(video)
