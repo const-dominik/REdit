@@ -107,7 +107,6 @@ def upload_to_dropbox(video, filename):
         direct_link = link.replace(
             "www.dropbox.com", "dl.dropboxusercontent.com"
         ).replace("?dl=0", "")
-        print(direct_link)
         return direct_link
 
     except Exception as e:
@@ -161,8 +160,6 @@ def upload_to_reels(video):
             },
         )
         data = response.json()
-        print(data)
-
         if "id" in data:
             return data["id"]
 
@@ -208,6 +205,6 @@ def upload_to_tiktok(video):
 
 
 def upload_to_social_media(video):
-    # upload_to_shorts(video)
+    upload_to_shorts(video)
     upload_to_reels(video)
-    # upload_to_tiktok(video)
+    upload_to_tiktok(video)
