@@ -109,7 +109,7 @@ def get_media(content_group, media_type):
 
         if not len(media_paths):
             return False
-        print(len(media_paths), len(random_posts))
+
         return media_paths, random_posts
     else:
         post = random_posts[0]
@@ -206,15 +206,27 @@ def find_duration(image_path):
     return duration
 
 
-def resize_media(media_path, target_size=(VIDEO_WIDTH, VIDEO_HEIGHT), media_type="img"):
+def resize_media(
+    media_path,
+    target_size=(VIDEO_WIDTH, VIDEO_HEIGHT),
+    media_type="img",
+    mode="halfscreen",
+):
     if media_type == "img":
         img = Image.open(media_path)
 
         target_width, target_height = target_size
+        height_scalar = 0.8 if mode == "fullscreen" else 0.4
+        max_width, max_height = target_width * 0.9, target_height * height_scalar
 
-        img.thumbnail(
-            (target_width * 0.8, target_height * 0.4), Image.Resampling.LANCZOS
-        )
+        ratio = min(max_width / img.width, max_height / img.height)
+        new_width = int(img.width * ratio)
+        new_height = int(img.height * ratio)
+
+        upscale = ratio > 1.0
+        resample = Image.Resampling.BICUBIC if upscale else Image.Resampling.LANCZOS
+
+        img = img.resize((new_width, new_height), resample)
 
         return img
     elif media_type == "vid":

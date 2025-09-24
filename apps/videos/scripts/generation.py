@@ -40,23 +40,30 @@ def generate_video(content_group):
     upload_to_social_media(generated_video)
 
 
+def get_base_y(canvas_height, img_height, mode, index):
+    if mode == "fullscreen":
+        return (canvas_height - img_height) // 2
+    if index == 0:
+        return int(0.05 * canvas_height)
+
+    return int(0.50 * canvas_height)
+
+
 def create_canvas_with_media(
     media_paths, media_type="img", canvas_width=1080, canvas_height=1920
 ):
+    resize_mode = "fullscreen" if len(media_paths) == 1 else "halfscreen"
     if media_type == "img":
         canvas = Image.new("RGBA", (canvas_width, canvas_height), (0, 0, 0, 0))
 
         for index, path in enumerate(media_paths):
-            img = resize_media(path)
+            img = resize_media(path, mode=resize_mode)
 
             if img.mode != "RGBA":
                 img = img.convert("RGBA")
 
             x = (canvas_width - img.width) // 2
-            if index == 0:
-                y = int(0.05 * canvas_height)
-            else:
-                y = int(0.5 * canvas_height)
+            y = get_base_y(canvas_height, img.size[1], resize_mode, index)
 
             canvas.paste(img, (x, y), img)
 
@@ -79,13 +86,7 @@ def create_canvas_with_media(
             resized_clip = resize_media(video_path, media_type="vid")
 
             x = (canvas_width - resized_clip.size[0]) // 2
-            if len(media_paths) == 1:
-                y = (canvas_height - resized_clip.size[1]) // 2
-            else:
-                if index == 0:
-                    y = int(0.05 * canvas_height)
-                else:
-                    y = int(0.5 * canvas_height)
+            y = get_base_y(canvas_height, resized_clip.size[1], resize_mode, index)
 
             video_clips_with_positions.append(resized_clip.with_position((x, y)))
 
@@ -122,7 +123,7 @@ def generate_media_video(content_group, media_type="img"):
         if media_type == "img":
             canvas_np = create_canvas_with_media(screen_media, media_type="img")
             media_clip = ImageClip(canvas_np).with_duration(
-                sum([find_duration(img) for img in screen_media])
+                max(10, sum([find_duration(img) for img in screen_media]))
             )
         elif media_type == "vid":
             media_clip = create_canvas_with_media(screen_media, media_type="vid")
